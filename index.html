@@ -91,7 +91,7 @@
         /* Waveform for audio */
         .audio-viz{display:flex;align-items:flex-end;gap:2px;height:40px;padding:4px 0}
         /* Lazy load */
-        .lazy-card{opacity:0;transform:translateY(10px);transition:opacity .4s,transform .4s}
+        .lazy-card{opacity:1;transform:translateY(0);transition:opacity .4s,transform .4s}
         .lazy-card.visible{opacity:1;transform:translateY(0)}
         /* Search highlight */
         .search-active .asset-card{opacity:.4}
@@ -729,6 +729,7 @@ function doSearch(){
 
 // FILTER CARDS
 function filterCards(){
+    console.log("filterCards çalıştı, currentSearch:", currentSearch);
     const cards=document.querySelectorAll('#asset-grid .asset-card');
     let visible=0;
     cards.forEach(card=>{
@@ -887,25 +888,9 @@ document.querySelectorAll('.modal-overlay').forEach(o=>{o.addEventListener('clic
 // INIT
 document.querySelectorAll('#asset-grid .asset-card').forEach(c => {
     c.style.display = '';
-    setTimeout(() => c.classList.add('visible'), 100);
+    c.classList.add('visible');
 });
 document.getElementById('result-count').textContent = document.querySelectorAll('#asset-grid .asset-card').length + ' assets';
-
-// Search input anlık
-document.getElementById('search-in').addEventListener('input', function(){
-    currentSearch = this.value.toLowerCase().trim();
-    const cards = document.querySelectorAll('#asset-grid .asset-card');
-    let visible = 0;
-    cards.forEach(card => {
-        const title = (card.dataset.title||'').toLowerCase();
-        const tags = (card.dataset.tags||'').toLowerCase();
-        const cat = (card.dataset.category||'').toLowerCase();
-        const show = !currentSearch || title.includes(currentSearch) || tags.includes(currentSearch) || cat.includes(currentSearch);
-        card.style.display = show ? '' : 'none';
-        if(show) visible++;
-    });
-    document.getElementById('result-count').textContent = visible + ' assets';
-});
 </script>
 </body>
 </html>
