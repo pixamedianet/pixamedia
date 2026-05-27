@@ -717,23 +717,31 @@ function filterCat(name,el){
 }
 
 // LIVE SEARCH
-function liveSearch(q){currentSearch=q.toLowerCase().trim();filterCards()}
+function liveSearch(q){
+    currentSearch=(q||'').toLowerCase().trim();
+    filterCards();
+}
 
 // FILTER CARDS
 function filterCards(){
     const cards=document.querySelectorAll('#asset-grid .asset-card');
     let visible=0;
-    const activeTab=document.querySelector('.tab-on span[data-i]')?.getAttribute('data-i')?.replace('tab_','') || 'video';
     cards.forEach(card=>{
         const tags=(card.dataset.tags||'').toLowerCase();
         const title=(card.dataset.title||'').toLowerCase();
         const cat=(card.dataset.category||'').toLowerCase();
-        const type=(card.dataset.type||'').toLowerCase();
         const quality=(card.dataset.quality||'').toLowerCase();
-        
         let show=true;
-        if(currentSearch && !title.includes(currentSearch) && !tags.includes(currentSearch) && !cat.includes(currentSearch)) show=false;
-        if(currentCat!=='All' && cat!==currentCat.toLowerCase()) show=false;
+        // Search filter
+        if(currentSearch){
+            const q=currentSearch.toLowerCase();
+            if(!title.includes(q) && !tags.includes(q) && !cat.includes(q)) show=false;
+        }
+        // Category filter
+        if(currentCat && currentCat!=='All'){
+            if(cat!==currentCat.toLowerCase()) show=false;
+        }
+        // Tag filter
         if(currentFilter==='new' && !tags.includes('new')) show=false;
         if(currentFilter==='popular' && !tags.includes('popular')) show=false;
         if(currentFilter==='week' && !tags.includes('week')) show=false;
@@ -741,12 +749,11 @@ function filterCards(){
         if(currentFilter==='8k' && quality!=='8k') show=false;
         if(currentFilter==='vertical' && !tags.includes('vertical')) show=false;
         if(currentFilter==='horizontal' && !tags.includes('horizontal')) show=false;
-        
-        card.style.display=show?'':'none';
-        if(show) visible++;
+        card.style.display=show?'flex':'none';
+        if(show){ visible++; card.classList.add('visible'); }
     });
     const rc=document.getElementById('result-count');
-    rc.textContent=visible>0?`${visible} assets`:'No results';
+    rc.textContent=visible>0?`${visible} assets`:'No results found';
 }
 
 // OPEN ASSET MODAL
