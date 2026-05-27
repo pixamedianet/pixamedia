@@ -222,7 +222,7 @@
             <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-500"></i>
             <input id="search-in" type="text" placeholder="Search cinematic nature, horror ambient, epic history..."
                 class="w-full pl-12 pr-28 py-3.5 bg-gray-900 border border-gray-800 rounded-2xl text-white placeholder-gray-600 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition text-sm"
-                oninput="liveSearch(this.value)" onkeydown="if(event.key==='Enter')liveSearch(this.value)">
+                onkeyup="liveSearch(this.value)" oninput="liveSearch(this.value)">
             <button onclick="liveSearch(document.getElementById('search-in').value)" class="btn-cyan absolute right-2 top-1/2 -translate-y-1/2 text-xs px-4 py-2 rounded-xl">
                 <span data-i="search_btn">Search</span>
             </button>
@@ -873,7 +873,12 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelect
 document.querySelectorAll('.modal-overlay').forEach(o=>{o.addEventListener('click',e=>{if(e.target===o||e.target.classList.contains('modal-inner')){o.classList.add('hidden');document.body.style.overflow=''}})});
 
 // INIT
-filterCards();
+// Başlangıçta tüm kartları göster
+document.querySelectorAll('#asset-grid .asset-card').forEach(c => {
+    c.style.display = '';
+    setTimeout(() => c.classList.add('visible'), 100);
+});
+document.getElementById('result-count').textContent = document.querySelectorAll('#asset-grid .asset-card').length + ' assets';
 </script>
 </body>
 </html>
