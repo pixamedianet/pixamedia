@@ -885,12 +885,27 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelect
 document.querySelectorAll('.modal-overlay').forEach(o=>{o.addEventListener('click',e=>{if(e.target===o||e.target.classList.contains('modal-inner')){o.classList.add('hidden');document.body.style.overflow=''}})});
 
 // INIT
-// Başlangıçta tüm kartları göster
 document.querySelectorAll('#asset-grid .asset-card').forEach(c => {
     c.style.display = '';
     setTimeout(() => c.classList.add('visible'), 100);
 });
 document.getElementById('result-count').textContent = document.querySelectorAll('#asset-grid .asset-card').length + ' assets';
+
+// Search input anlık
+document.getElementById('search-in').addEventListener('input', function(){
+    currentSearch = this.value.toLowerCase().trim();
+    const cards = document.querySelectorAll('#asset-grid .asset-card');
+    let visible = 0;
+    cards.forEach(card => {
+        const title = (card.dataset.title||'').toLowerCase();
+        const tags = (card.dataset.tags||'').toLowerCase();
+        const cat = (card.dataset.category||'').toLowerCase();
+        const show = !currentSearch || title.includes(currentSearch) || tags.includes(currentSearch) || cat.includes(currentSearch);
+        card.style.display = show ? '' : 'none';
+        if(show) visible++;
+    });
+    document.getElementById('result-count').textContent = visible + ' assets';
+});
 </script>
 </body>
 </html>
