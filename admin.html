@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PixaMedia Admin Panel</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { background:#0b0f19; color:#f3f4f6; font-family:system-ui,sans-serif; }
+        .card { background:#0f172a; border:1px solid #1e293b; border-radius:.75rem; padding:1.25rem; }
+        .stat-card { background:#0f172a; border:1px solid #1e293b; border-radius:.75rem; padding:1rem; }
+        .btn { padding:.5rem 1rem; border-radius:.5rem; font-size:.8rem; font-weight:600; cursor:pointer; transition:opacity .2s; }
+        .btn:hover { opacity:.85; }
+        .btn-red { background:#7f1d1d; color:#fca5a5; border:1px solid #991b1b; }
+        .btn-cyan { background:linear-gradient(135deg,#06b6d4,#3b82f6); color:#fff; }
+        .btn-yellow { background:#713f12; color:#fcd34d; border:1px solid #92400e; }
+        .btn-green { background:#052e16; color:#4ade80; border:1px solid #166534; }
+        .badge { font-size:10px; font-weight:700; padding:2px 8px; border-radius:20px; }
+        .badge-vip { background:rgba(234,179,8,.15); color:#facc15; }
+        .badge-reg { background:rgba(34,197,94,.15); color:#4ade80; }
+        .badge-guest { background:rgba(107,114,128,.15); color:#9ca3af; }
+        .badge-video { background:rgba(6,182,212,.15); color:#22d3ee; }
+        .badge-image { background:rgba(34,197,94,.15); color:#4ade80; }
+        .badge-audio { background:rgba(168,85,247,.15); color:#a855f7; }
+        table { width:100%; border-collapse:collapse; }
+        th { text-align:left; font-size:11px; font-weight:600; color:#6b7280; text-transform:uppercase; padding:.75rem 1rem; border-bottom:1px solid #1e293b; }
+        td { padding:.75rem 1rem; border-bottom:1px solid #1e293b; font-size:13px; color:#d1d5db; }
+        tr:hover td { background:rgba(255,255,255,.02); }
+        .sidebar-item { padding:.6rem 1rem; border-radius:.5rem; cursor:pointer; font-size:.875rem; color:#9ca3af; display:flex; align-items:center; gap:.75rem; transition:all .15s; }
+        .sidebar-item:hover { background:#1e293b; color:#fff; }
+        .sidebar-item.active { background:rgba(6,182,212,.1); color:#22d3ee; }
+        ::-webkit-scrollbar { width:4px; }
+        ::-webkit-scrollbar-thumb { background:#1e293b; border-radius:2px; }
+        @keyframes spin { to{transform:rotate(360deg)} }
+        .spin { animation:spin .7s linear infinite; }
+        .login-overlay { position:fixed; inset:0; background:#0b0f19; z-index:999; display:flex; align-items:center; justify-content:center; }
+        input { background:#0b0f19; border:1px solid #1e293b; border-radius:.5rem; padding:.6rem 1rem; color:#fff; font-size:.875rem; outline:none; width:100%; }
+        input:focus { border-color:#22d3ee; }
+        select { background:#0b0f19; border:1px solid #1e293b; border-radius:.5rem; padding:.5rem .75rem; color:#fff; font-size:.8rem; outline:none; }
+    </style>
+</head>
+<body class="min-h-screen">
+
+<!-- LOGIN -->
+<div id="login-overlay" class="login-overlay">
+    <div style="background:#0f172a; border:1px solid #1e293b; border-radius:1rem; padding:2rem; width:100%; max-width:360px;">
+        <div class="flex items-center gap-2 mb-6">
+            <svg width="28" height="28" viewBox="0 0 64 64"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#a855f7"/></linearGradient></defs><rect width="64" height="64" rx="14" fill="#0f172a"/><rect x="10" y="13" width="7" height="38" rx="3.5" fill="url(#lg)"/><polygon points="22,13 22,51 54,32" fill="url(#lg)"/></svg>
+            <span style="font-size:1.1rem;font-weight:900;background:linear-gradient(135deg,#22d3ee,#a855f7);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">PIXAMEDIA ADMIN</span>
+        </div>
+        <div class="space-y-3">
+            <div>
+                <label class="text-xs text-gray-500 mb-1 block">Admin Şifre</label>
+                <input type="password" id="admin-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')checkLogin()">
+            </div>
+            <button onclick="checkLogin()" class="btn btn-cyan w-full py-2.5">Giriş Yap</button>
+            <p id="login-err" class="text-xs text-red-400 text-center hidden">Yanlış şifre!</p>
+        </div>
+    </div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="flex h-screen overflow-hidden">
+
+    <!-- SIDEBAR -->
+    <aside style="width:220px; min-width:220px; background:#070a12; border-right:1px solid #1e293b; padding:1rem; display:flex; flex-direction:column; gap:.25rem;">
+        <div class="flex items-center gap-2 mb-4 px-1">
+            <svg width="24" height="24" viewBox="0 0 64 64"><defs><linearGradient id="lg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#a855f7"/></linearGradient></defs><rect width="64" height="64" rx="14" fill="#0f172a"/><rect x="10" y="13" width="7" height="38" rx="3.5" fill="url(#lg2)"/><polygon points="22,13 22,51 54,32" fill="url(#lg2)"/></svg>
+            <span class="text-sm font-bold text-gray-300">Admin Panel</span>
+        </div>
+        <div onclick="showPage('dashboard')" class="sidebar-item active" id="nav-dashboard"><i class="fa-solid fa-chart-line w-4"></i>Dashboard</div>
+        <div onclick="showPage('contents')" class="sidebar-item" id="nav-contents"><i class="fa-solid fa-photo-film w-4"></i>İçerikler</div>
+        <div onclick="showPage('users')" class="sidebar-item" id="nav-users"><i class="fa-solid fa-users w-4"></i>Kullanıcılar</div>
+        <div onclick="showPage('upload')" class="sidebar-item" id="nav-upload"><i class="fa-solid fa-upload w-4"></i>Yükle</div>
+        <div class="mt-auto">
+            <div onclick="window.open('https://pixamedia.net','_blank')" class="sidebar-item"><i class="fa-solid fa-globe w-4"></i>Siteyi Gör</div>
+            <div onclick="logout()" class="sidebar-item text-red-400"><i class="fa-solid fa-right-from-bracket w-4"></i>Çıkış</div>
+        </div>
+    </aside>
+
+    <!-- CONTENT -->
+    <main class="flex-1 overflow-y-auto p-6">
+
+        <!-- DASHBOARD -->
+        <div id="page-dashboard">
+            <div class="flex items-center justify-between mb-6">
+                <h1 class="text-xl font-black text-white">Dashboard</h1>
+                <button onclick="loadDashboard()" class="btn btn-cyan text-xs px-3 py-1.5"><i class="fa-solid fa-refresh mr-1"></i>Yenile</button>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div class="stat-card">
+                    <p class="text-xs text-gray-500 mb-1">Toplam İçerik</p>
+                    <p id="stat-contents" class="text-2xl font-black text-cyan-400">—</p>
+                    <p class="text-xs text-gray-600 mt-1">Video + Resim + Ses</p>
+                </div>
+                <div class="stat-card">
+                    <p class="text-xs text-gray-500 mb-1">Toplam Kullanıcı</p>
+                    <p id="stat-users" class="text-2xl font-black text-purple-400">—</p>
+                    <p class="text-xs text-gray-600 mt-1">Kayıtlı üyeler</p>
+                </div>
+                <div class="stat-card">
+                    <p class="text-xs text-gray-500 mb-1">Toplam İndirme</p>
+                    <p id="stat-downloads" class="text-2xl font-black text-green-400">—</p>
+                    <p class="text-xs text-gray-600 mt-1">Tüm zamanlar</p>
+                </div>
+                <div class="stat-card">
+                    <p class="text-xs text-gray-500 mb-1">VIP Üyeler</p>
+                    <p id="stat-vip" class="text-2xl font-black text-yellow-400">—</p>
+                    <p class="text-xs text-gray-600 mt-1">Aktif abonelik</p>
+                </div>
+            </div>
+
+            <!-- İçerik Dağılımı -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div class="card">
+                    <h3 class="text-sm font-bold text-gray-300 mb-3">İçerik Türleri</h3>
+                    <div id="content-types" class="space-y-2"></div>
+                </div>
+                <div class="card">
+                    <h3 class="text-sm font-bold text-gray-300 mb-3">Kategori Dağılımı</h3>
+                    <div id="category-dist" class="space-y-2 max-h-48 overflow-y-auto"></div>
+                </div>
+            </div>
+
+            <!-- Son Eklenen -->
+            <div class="card">
+                <h3 class="text-sm font-bold text-gray-300 mb-3">Son Eklenen İçerikler</h3>
+                <div id="recent-contents"></div>
+            </div>
+        </div>
+
+        <!-- İÇERİKLER -->
+        <div id="page-contents" class="hidden">
+            <div class="flex items-center justify-between mb-6">
+                <h1 class="text-xl font-black text-white">İçerikler</h1>
+                <div class="flex gap-2">
+                    <select id="filter-type" onchange="loadContents()" class="text-xs">
+                        <option value="">Tüm Türler</option>
+                        <option value="video">Video</option>
+                        <option value="image">Resim</option>
+                        <option value="audio">Ses</option>
+                    </select>
+                    <select id="filter-cat" onchange="loadContents()" class="text-xs">
+                        <option value="">Tüm Kategoriler</option>
+                        <option>Animal</option><option>Horror</option><option>Future</option>
+                        <option>Nature</option><option>Wild</option><option>History</option>
+                        <option>Kids</option><option>Games</option><option>Space</option>
+                        <option>Travel</option><option>Music</option>
+                    </select>
+                    <button onclick="loadContents()" class="btn btn-cyan text-xs px-3"><i class="fa-solid fa-refresh"></i></button>
+                </div>
+            </div>
+            <div class="card">
+                <div id="contents-table">
+                    <div class="text-center py-8 text-gray-500"><i class="fa-solid fa-spinner spin text-xl"></i></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- KULLANICILAR -->
+        <div id="page-users" class="hidden">
+            <div class="flex items-center justify-between mb-6">
+                <h1 class="text-xl font-black text-white">Kullanıcılar</h1>
+                <button onclick="loadUsers()" class="btn btn-cyan text-xs px-3 py-1.5"><i class="fa-solid fa-refresh mr-1"></i>Yenile</button>
+            </div>
+            <div class="card">
+                <div id="users-table">
+                    <div class="text-center py-8 text-gray-500"><i class="fa-solid fa-spinner spin text-xl"></i></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- YÜKLE -->
+        <div id="page-upload" class="hidden">
+            <h1 class="text-xl font-black text-white mb-6">Manuel İçerik Yükle</h1>
+            <div class="card max-w-lg">
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-xs text-gray-500 mb-1 block">Başlık *</label>
+                        <input type="text" id="up-title" placeholder="İçerik başlığı">
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-500 mb-1 block">Açıklama</label>
+                        <input type="text" id="up-desc" placeholder="Kısa açıklama">
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="text-xs text-gray-500 mb-1 block">Kategori *</label>
+                            <select id="up-cat" class="w-full">
+                                <option>Animal</option><option>Horror</option><option>Future</option>
+                                <option>Nature</option><option>Wild</option><option>History</option>
+                                <option>Kids</option><option>Animation</option><option>Games</option>
+                                <option>Economy</option><option>Crafts</option><option>Vehicles</option>
+                                <option>Motivation</option><option>ASMR</option><option>Travel</option>
+                                <option>Abstract</option><option>Space</option><option>Food</option>
+                                <option>Sport</option><option>Music</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-500 mb-1 block">Tür *</label>
+                            <select id="up-type" class="w-full">
+                                <option value="video">Video</option>
+                                <option value="image">Resim</option>
+                                <option value="audio">Ses/Müzik</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="text-xs text-gray-500 mb-1 block">Kalite</label>
+                            <select id="up-quality" class="w-full">
+                                <option value="4K">4K</option>
+                                <option value="8K">8K</option>
+                                <option value="1080p">1080p</option>
+                                <option value="">—</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-500 mb-1 block">VIP?</label>
+                            <select id="up-vip" class="w-full">
+                                <option value="false">Hayır (Ücretsiz)</option>
+                                <option value="true">Evet (VIP)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-500 mb-1 block">Etiketler (virgülle)</label>
+                        <input type="text" id="up-tags" placeholder="nature, cinematic, 4k">
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-500 mb-1 block">Dosya URL (R2)</label>
+                        <input type="text" id="up-url" placeholder="https://pub-xxx.r2.dev/videos/...">
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-500 mb-1 block">Thumbnail URL (opsiyonel)</label>
+                        <input type="text" id="up-thumb" placeholder="https://pub-xxx.r2.dev/thumbnails/...">
+                    </div>
+                    <button onclick="adminUpload()" class="btn btn-cyan w-full py-2.5">
+                        <i class="fa-solid fa-upload mr-2"></i>Yükle
+                    </button>
+                    <p id="up-msg" class="text-xs text-center hidden"></p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<script>
+// ── CONFIG ──
+const SUPABASE_URL = 'https://qxawiooxixrkhjauibxw.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4YXdpb294aXhya2hqYXVpYnh3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4MjczMTYsImV4cCI6MjA5NTQwMzMxNn0.UfDPc-_tr45TbN9eZace4g9Sy5_1vqMGbbSit_VutKM';
+const ADMIN_PASS = 'pixamedia2026'; // Bunu değiştir!
+
+let sb = null;
+try { sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } catch(e){}
+
+// ── LOGIN ──
+function checkLogin() {
+    const pass = document.getElementById('admin-pass').value;
+    if(pass === ADMIN_PASS) {
+        document.getElementById('login-overlay').style.display = 'none';
+        loadDashboard();
+        loadContents();
+        loadUsers();
+    } else {
+        document.getElementById('login-err').classList.remove('hidden');
+    }
+}
+document.getElementById('admin-pass').addEventListener('keydown', e => {
+    if(e.key === 'Enter') checkLogin();
+});
+
+function logout() {
+    document.getElementById('login-overlay').style.display = 'flex';
+    document.getElementById('admin-pass').value = '';
+}
+
+// ── NAV ──
+function showPage(page) {
+    ['dashboard','contents','users','upload'].forEach(p => {
+        document.getElementById('page-'+p).classList.toggle('hidden', p !== page);
+        document.getElementById('nav-'+p).classList.toggle('active', p === page);
+    });
+}
+
+// ── API ──
+async function sbFetch(path) {
+    const r = await fetch(SUPABASE_URL + path, {
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
+    });
+    return r.json();
+}
+
+async function sbDelete(table, id) {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
+        method: 'DELETE',
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Prefer': 'return=minimal' }
+    });
+    return r.ok;
+}
+
+async function sbPatch(table, id, data) {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
+        method: 'PATCH',
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    });
+    return r.ok;
+}
+
+// ── DASHBOARD ──
+async function loadDashboard() {
+    try {
+        // İçerik sayıları
+        const contents = await sbFetch('/rest/v1/contents?select=id,type,category,downloads');
+        document.getElementById('stat-contents').textContent = contents.length || 0;
+
+        // İndirme toplamı
+        const totalDL = contents.reduce((sum, c) => sum + (c.downloads || 0), 0);
+        document.getElementById('stat-downloads').textContent = totalDL.toLocaleString();
+
+        // Kullanıcılar
+        const profiles = await sbFetch('/rest/v1/profiles?select=id,tier');
+        document.getElementById('stat-users').textContent = profiles.length || 0;
+        const vipCount = profiles.filter(p => p.tier === 'vip').length;
+        document.getElementById('stat-vip').textContent = vipCount;
+
+        // İçerik türleri
+        const types = {};
+        contents.forEach(c => { types[c.type] = (types[c.type]||0) + 1; });
+        const typeColors = { video: 'bg-cyan-500', image: 'bg-emerald-500', audio: 'bg-purple-500' };
+        document.getElementById('content-types').innerHTML = Object.entries(types).map(([type, count]) => `
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full ${typeColors[type]||'bg-gray-500'}"></div>
+                    <span class="text-sm capitalize text-gray-300">${type}</span>
+                </div>
+                <span class="text-sm font-bold text-white">${count}</span>
+            </div>
+        `).join('');
+
+        // Kategori dağılımı
+        const cats = {};
+        contents.forEach(c => { cats[c.category] = (cats[c.category]||0) + 1; });
+        const sortedCats = Object.entries(cats).sort((a,b) => b[1]-a[1]);
+        document.getElementById('category-dist').innerHTML = sortedCats.map(([cat, count]) => `
+            <div class="flex items-center justify-between">
+                <span class="text-xs text-gray-400">${cat}</span>
+                <div class="flex items-center gap-2">
+                    <div style="width:${Math.min(count*10,80)}px; height:4px; background:rgba(6,182,212,.4); border-radius:2px;"></div>
+                    <span class="text-xs font-bold text-gray-300">${count}</span>
+                </div>
+            </div>
+        `).join('');
+
+        // Son eklenenler
+        const recent = await sbFetch('/rest/v1/contents?select=*&order=created_at.desc&limit=5');
+        document.getElementById('recent-contents').innerHTML = `
+            <table>
+                <thead><tr>
+                    <th>Başlık</th><th>Tür</th><th>Kategori</th><th>İndirme</th><th>Tarih</th>
+                </tr></thead>
+                <tbody>
+                    ${recent.map(c => `
+                        <tr>
+                            <td class="max-w-xs truncate">${c.title}</td>
+                            <td><span class="badge badge-${c.type}">${c.type}</span></td>
+                            <td>${c.category}</td>
+                            <td>${c.downloads||0}</td>
+                            <td class="text-gray-500">${new Date(c.created_at).toLocaleDateString('tr-TR')}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>`;
+
+    } catch(e) { console.error(e); }
+}
+
+// ── İÇERİKLER ──
+async function loadContents() {
+    const type = document.getElementById('filter-type')?.value || '';
+    const cat = document.getElementById('filter-cat')?.value || '';
+    let url = '/rest/v1/contents?select=*&order=created_at.desc&limit=100';
+    if(type) url += `&type=eq.${type}`;
+    if(cat) url += `&category=eq.${cat}`;
+
+    document.getElementById('contents-table').innerHTML = '<div class="text-center py-8 text-gray-500"><i class="fa-solid fa-spinner spin text-xl"></i></div>';
+
+    try {
+        const data = await sbFetch(url);
+        document.getElementById('contents-table').innerHTML = `
+            <table>
+                <thead><tr>
+                    <th>Thumbnail</th><th>Başlık</th><th>Tür</th><th>Kategori</th><th>Kalite</th><th>VIP</th><th>İndirme</th><th>İşlemler</th>
+                </tr></thead>
+                <tbody>
+                    ${data.map(c => `
+                        <tr id="row-${c.id}">
+                            <td><img src="${c.thumbnail_url||''}" onerror="this.style.display='none'" style="width:40px;height:60px;object-fit:cover;border-radius:4px;background:#1e293b"></td>
+                            <td class="max-w-xs"><p class="truncate font-medium text-white">${c.title}</p><p class="text-xs text-gray-500 truncate">${c.file_url||''}</p></td>
+                            <td><span class="badge badge-${c.type}">${c.type}</span></td>
+                            <td class="text-gray-400">${c.category}</td>
+                            <td class="text-gray-400">${c.quality||'—'}</td>
+                            <td>${c.is_vip ? '<span class="badge badge-vip">VIP</span>' : '<span class="text-gray-600 text-xs">—</span>'}</td>
+                            <td class="text-gray-400">${c.downloads||0}</td>
+                            <td>
+                                <div class="flex gap-1">
+                                    <button onclick="toggleVip(${c.id},${c.is_vip})" class="btn btn-yellow text-[10px] px-2 py-1">${c.is_vip?'VIP Kaldır':'VIP Yap'}</button>
+                                    <button onclick="deleteContent(${c.id})" class="btn btn-red text-[10px] px-2 py-1">Sil</button>
+                                </div>
+                            </td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+            <p class="text-xs text-gray-600 mt-3 px-1">${data.length} içerik</p>`;
+    } catch(e) { console.error(e); }
+}
+
+async function deleteContent(id) {
+    if(!confirm('Bu içeriği silmek istediğine emin misin?')) return;
+    const ok = await sbDelete('contents', id);
+    if(ok) {
+        document.getElementById('row-'+id)?.remove();
+        showToast('İçerik silindi', 'ok');
+    }
+}
+
+async function toggleVip(id, isVip) {
+    const ok = await sbPatch('contents', id, { is_vip: !isVip });
+    if(ok) { loadContents(); showToast(isVip ? 'VIP kaldırıldı' : 'VIP yapıldı', 'ok'); }
+}
+
+// ── KULLANICILAR ──
+async function loadUsers() {
+    document.getElementById('users-table').innerHTML = '<div class="text-center py-8 text-gray-500"><i class="fa-solid fa-spinner spin text-xl"></i></div>';
+    try {
+        const data = await sbFetch('/rest/v1/profiles?select=*&order=created_at.desc&limit=100');
+        document.getElementById('users-table').innerHTML = `
+            <table>
+                <thead><tr>
+                    <th>ID</th><th>İsim</th><th>Tier</th><th>İndirme</th><th>Kayıt Tarihi</th><th>İşlemler</th>
+                </tr></thead>
+                <tbody>
+                    ${data.map(u => `
+                        <tr>
+                            <td class="text-gray-600 text-xs font-mono">${u.id?.substring(0,8)}...</td>
+                            <td class="text-white">${u.name||'—'}</td>
+                            <td><span class="badge badge-${u.tier||'guest'}">${u.tier||'guest'}</span></td>
+                            <td>${u.downloads_today||0}</td>
+                            <td class="text-gray-500">${u.created_at ? new Date(u.created_at).toLocaleDateString('tr-TR') : '—'}</td>
+                            <td>
+                                <button onclick="makeVip('${u.id}')" class="btn btn-yellow text-[10px] px-2 py-1">VIP Yap</button>
+                            </td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+            <p class="text-xs text-gray-600 mt-3 px-1">${data.length} kullanıcı</p>`;
+    } catch(e) { console.error(e); }
+}
+
+async function makeVip(userId) {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${userId}`, {
+        method: 'PATCH',
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer '+SUPABASE_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tier: 'vip' })
+    });
+    if(r.ok) { loadUsers(); showToast('Kullanıcı VIP yapıldı!', 'ok'); }
+}
+
+// ── ADMIN UPLOAD ──
+async function adminUpload() {
+    const title = document.getElementById('up-title').value.trim();
+    const url = document.getElementById('up-url').value.trim();
+    if(!title || !url) { showToast('Başlık ve URL zorunlu!', 'err'); return; }
+
+    const tagsRaw = document.getElementById('up-tags').value.trim();
+    const tags = tagsRaw ? tagsRaw.split(',').map(t => t.trim()) : [];
+
+    const data = {
+        title,
+        description: document.getElementById('up-desc').value.trim(),
+        category: document.getElementById('up-cat').value,
+        type: document.getElementById('up-type').value,
+        quality: document.getElementById('up-quality').value,
+        is_vip: document.getElementById('up-vip').value === 'true',
+        tags,
+        file_url: url,
+        thumbnail_url: document.getElementById('up-thumb').value.trim(),
+        downloads: 0,
+        subcategory: document.getElementById('up-cat').value.toLowerCase(),
+        format: 'vertical',
+        duration: 0
+    };
+
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/contents`, {
+        method: 'POST',
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer '+SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+        body: JSON.stringify(data)
+    });
+
+    if(r.ok) {
+        showToast('İçerik eklendi!', 'ok');
+        ['up-title','up-desc','up-tags','up-url','up-thumb'].forEach(id => document.getElementById(id).value = '');
+        loadContents();
+        showPage('contents');
+    } else {
+        showToast('Hata: ' + await r.text(), 'err');
+    }
+}
+
+// ── TOAST ──
+function showToast(msg, type='ok') {
+    let t = document.getElementById('admin-toast');
+    if(!t) {
+        t = document.createElement('div');
+        t.id = 'admin-toast';
+        t.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:9999;padding:10px 16px;border-radius:8px;font-size:13px;font-weight:600;transition:opacity .3s;';
+        document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    t.style.background = type === 'ok' ? '#052e16' : '#2d0a0a';
+    t.style.color = type === 'ok' ? '#4ade80' : '#f87171';
+    t.style.border = `1px solid ${type === 'ok' ? '#166534' : '#7f1d1d'}`;
+    t.style.opacity = '1';
+    clearTimeout(t._t);
+    t._t = setTimeout(() => t.style.opacity = '0', 3000);
+}
+</script>
+</body>
+</html>
