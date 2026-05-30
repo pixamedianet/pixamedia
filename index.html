@@ -118,14 +118,29 @@
 <header class="border-b border-gray-800 bg-[#0f172a]/90 backdrop-blur-md sticky top-0 z-50 px-4 py-3">
     <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
         <div class="flex items-center gap-2.5 cursor-pointer select-none flex-shrink-0" onclick="window.scrollTo({top:0,behavior:'smooth'})">
-            <svg width="30" height="30" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                <defs><linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#a855f7"/></linearGradient></defs>
-                <rect width="64" height="64" rx="14" fill="#0f172a"/>
-                <rect x="10" y="13" width="7" height="38" rx="3.5" fill="url(#lg1)"/>
-                <polygon points="22,13 22,51 54,32" fill="url(#lg1)"/>
-                <circle cx="54" cy="32" r="4" fill="#22d3ee" opacity=".6"/>
+            <svg width="36" height="36" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#a855f7"/></linearGradient>
+                    <linearGradient id="lg1h" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#a855f7"/></linearGradient>
+                </defs>
+                <rect width="72" height="72" rx="16" fill="#0b0f19"/>
+                <!-- Film şeridi sol bar -->
+                <rect x="10" y="13" width="9" height="46" rx="3" fill="url(#lg1)"/>
+                <!-- Film delikleri -->
+                <rect x="12" y="17" width="5" height="7" rx="1" fill="#0b0f19"/>
+                <rect x="12" y="29" width="5" height="7" rx="1" fill="#0b0f19"/>
+                <rect x="12" y="41" width="5" height="7" rx="1" fill="#0b0f19"/>
+                <!-- Play üçgeni -->
+                <polygon points="24,13 24,59 58,36" fill="url(#lg1)"/>
+                <!-- Sinyal dalgaları -->
+                <path d="M62 24 Q70 36 62 48" fill="none" stroke="#22d3ee" stroke-width="3" stroke-linecap="round"/>
+                <!-- Yıldız -->
+                <circle cx="58" cy="15" r="3.5" fill="#facc15"/>
             </svg>
-            <span class="pm-logo">PIXAMEDIA</span>
+            <div class="flex flex-col leading-none">
+                <span class="pm-logo">PIXAMEDIA</span>
+                <span style="font-size:8px;color:#4b5563;letter-spacing:2px;margin-top:1px">AI STOCK ASSETS</span>
+            </div>
         </div>
         <div class="hidden md:flex items-center gap-2.5">
             <button onclick="openModal('coffee-modal')" class="bg-amber-500 hover:bg-amber-400 active:scale-95 text-slate-950 font-bold px-3 py-1.5 rounded-full text-sm flex items-center gap-1.5 transition-all">
@@ -322,7 +337,7 @@
                 <div class="p-3 bg-gray-900 border-t border-gray-800/50 z-10">
                     <span class="text-[10px] bg-cyan-500/10 text-cyan-400 font-bold px-2 py-0.5 rounded">4K VIDEO</span>
                     <h4 class="text-xs font-semibold truncate mt-1 text-gray-200">Dark Cyberpunk Street Loop</h4>
-                    <p class="text-[10px] text-gray-600 mt-0.5 flex items-center gap-1"><i class="fa-solid fa-download text-[9px]"></i> 1.2k downloads</p>
+                    <p class="text-[10px] text-gray-600 mt-0.5 flex items-center gap-1"><i class="fa-solid fa-download text-[9px]"></i> 0 downloads</p>
                 </div>
             </div>
 
@@ -352,7 +367,7 @@
                 <div class="p-3 bg-gray-900 border-t border-gray-800/50 z-10">
                     <span class="text-[10px] bg-purple-500/10 text-purple-400 font-bold px-2 py-0.5 rounded">AI AUDIO</span>
                     <h4 class="text-xs font-semibold truncate mt-1 text-gray-200">Epic Historical Cinematic</h4>
-                    <p class="text-[10px] text-gray-600 mt-0.5 flex items-center gap-1"><i class="fa-solid fa-download text-[9px]"></i> 856 downloads</p>
+                    <p class="text-[10px] text-gray-600 mt-0.5 flex items-center gap-1"><i class="fa-solid fa-download text-[9px]"></i> 0 downloads</p>
                 </div>
             </div>
 
@@ -379,7 +394,7 @@
                 <div class="p-3 bg-gray-900 border-t border-gray-800/50 z-10">
                     <span class="text-[10px] bg-amber-500/10 text-amber-400 font-bold px-2 py-0.5 rounded">4K VIDEO</span>
                     <h4 class="text-xs font-semibold truncate mt-1 text-gray-200">Wild Lion Hunt 4K</h4>
-                    <p class="text-[10px] text-gray-600 mt-0.5 flex items-center gap-1"><i class="fa-solid fa-download text-[9px]"></i> 2.1k downloads</p>
+                    <p class="text-[10px] text-gray-600 mt-0.5 flex items-center gap-1"><i class="fa-solid fa-download text-[9px]"></i> 0 downloads</p>
                 </div>
             </div>
 
@@ -406,7 +421,7 @@
                 <div class="p-3 bg-gray-900 border-t border-gray-800/50 z-10">
                     <span class="text-[10px] bg-cyan-500/10 text-cyan-400 font-bold px-2 py-0.5 rounded">8K VIDEO</span>
                     <h4 class="text-xs font-semibold truncate mt-1 text-gray-200">Future City 8K Timelapse</h4>
-                    <p class="text-[10px] text-gray-600 mt-0.5 flex items-center gap-1"><i class="fa-solid fa-download text-[9px]"></i> 3.4k downloads</p>
+                    <p class="text-[10px] text-gray-600 mt-0.5 flex items-center gap-1"><i class="fa-solid fa-download text-[9px]"></i> 0 downloads</p>
                 </div>
             </div>
 
@@ -463,11 +478,12 @@
 <footer class="border-t border-gray-800 bg-[#070a12] py-6 px-4 mt-8">
     <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between text-sm text-gray-600 gap-4">
         <div class="flex items-center gap-2.5">
-            <svg width="22" height="22" viewBox="0 0 64 64"><defs><linearGradient id="lg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#a855f7"/></linearGradient></defs><rect width="64" height="64" rx="14" fill="#0f172a"/><rect x="10" y="13" width="7" height="38" rx="3.5" fill="url(#lg2)"/><polygon points="22,13 22,51 54,32" fill="url(#lg2)"/></svg>
+            <svg width="26" height="26" viewBox="0 0 72 72"><defs><linearGradient id="lg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#a855f7"/></linearGradient></defs><rect width="72" height="72" rx="16" fill="#0b0f19"/><rect x="10" y="13" width="9" height="46" rx="3" fill="url(#lg2)"/><rect x="12" y="17" width="5" height="7" rx="1" fill="#0b0f19"/><rect x="12" y="29" width="5" height="7" rx="1" fill="#0b0f19"/><rect x="12" y="41" width="5" height="7" rx="1" fill="#0b0f19"/><polygon points="24,13 24,59 58,36" fill="url(#lg2)"/><path d="M62 24 Q70 36 62 48" fill="none" stroke="#22d3ee" stroke-width="3" stroke-linecap="round"/><circle cx="58" cy="15" r="3.5" fill="#facc15"/></svg>
             <span>© 2026 <span class="text-gray-400 font-semibold">PixaMedia</span>. All rights reserved.</span>
         </div>
         <div class="flex items-center flex-wrap justify-center gap-4">
             <button onclick="openModal('coffee-modal')" class="text-amber-400 hover:text-amber-300 font-bold flex items-center gap-1.5 transition text-sm"><i class="fa-solid fa-mug-hot"></i>Support Us</button>
+            <a href="/about.html" class="hover:text-gray-400 transition text-xs">About</a>
             <a href="/terms.html" class="hover:text-gray-400 transition text-xs">Terms</a>
             <a href="/privacy.html" class="hover:text-gray-400 transition text-xs">Privacy</a>
             <a href="/refund.html" class="hover:text-gray-400 transition text-xs">Refund</a>
@@ -974,15 +990,23 @@ async function loadContents(category='', search='', filter='') {
     
     try {
         let url = `${SUPABASE_URL}/rest/v1/contents?select=*&order=created_at.desc&limit=50`;
-        if(category && category !== 'All') url += `&category=eq.${category}`;
-        if(search) url += `&or=(title.ilike.*${search}*,tags.cs.{${search}})`;
+        if(category && category !== 'All') url += `&category=eq.${encodeURIComponent(category)}`;
+        if(search) url += `&title=ilike.*${encodeURIComponent(search)}*`;
         
         const res = await fetch(url, {
+            method: 'GET',
             headers: {
                 'apikey': SUPABASE_KEY,
-                'Authorization': `Bearer ${SUPABASE_KEY}`
-            }
+                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            mode: 'cors'
         });
+        
+        if(!res.ok) {
+            throw new Error(`HTTP ${res.status}`);
+        }
         
         const data = await res.json();
         
@@ -1152,5 +1176,6 @@ document.getElementById('search-in').addEventListener('keyup', function() {
 loadContents();
 checkSession();
 </script>
+
 </body>
 </html>
