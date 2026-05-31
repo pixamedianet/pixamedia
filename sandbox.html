@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PixaMedia API Sandbox — Free Test Environment</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body{background:#0b0f19;color:#f3f4f6;font-family:system-ui,sans-serif}
+        .pm-logo{font-size:1.1rem;font-weight:900;background:linear-gradient(135deg,#22d3ee,#a855f7);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+        .card{background:#0f172a;border:1px solid #1e293b;border-radius:1rem;padding:1.25rem}
+        .code-block{background:#020817;border:1px solid #1e293b;border-radius:.75rem;padding:1rem;font-family:monospace;font-size:12px;line-height:1.8;overflow-x:auto;position:relative}
+        .kw{color:#22d3ee}.str{color:#a3e635}.num{color:#f59e0b}.cm{color:#4b5563}.fn{color:#c084fc}
+        .copy-btn{position:absolute;top:8px;right:8px;background:#1e293b;color:#9ca3af;border:none;padding:3px 10px;border-radius:4px;cursor:pointer;font-size:11px;transition:all .2s}
+        .copy-btn:hover{background:#334155;color:#fff}
+        .sandbox-key{background:#020817;border:2px solid rgba(34,211,238,.3);border-radius:.75rem;padding:.75rem 1rem;font-family:monospace;font-size:14px;color:#22d3ee;text-align:center;font-weight:700;letter-spacing:.1em}
+        .result-box{background:#020817;border:1px solid #1e293b;border-radius:.75rem;padding:1rem;font-family:monospace;font-size:12px;color:#9ca3af;min-height:200px;max-height:400px;overflow-y:auto;white-space:pre-wrap}
+        .tab-btn{padding:.5rem 1.25rem;border-radius:.5rem;font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;border:1px solid #1e293b;color:#9ca3af;background:transparent}
+        .tab-btn.active{background:rgba(34,211,238,.1);border-color:rgba(34,211,238,.4);color:#22d3ee}
+        select,input{background:#0b0f19;border:1px solid #1e293b;border-radius:.5rem;padding:.5rem .75rem;color:#fff;font-size:.8rem;outline:none}
+        select:focus,input:focus{border-color:#22d3ee}
+        .btn-cyan{background:linear-gradient(135deg,#06b6d4,#3b82f6);color:#fff;font-weight:700;border-radius:.75rem;padding:.6rem 1.25rem;cursor:pointer;border:none;font-size:.875rem;transition:opacity .2s}
+        .btn-cyan:hover{opacity:.9}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .spin{animation:spin .7s linear infinite}
+    </style>
+</head>
+<body>
+
+<header class="border-b border-gray-800 bg-[#0f172a]/90 backdrop-blur-md sticky top-0 z-50 px-4 py-3">
+    <div class="max-w-6xl mx-auto flex items-center justify-between">
+        <a href="/" class="flex items-center gap-2">
+            <svg width="28" height="28" viewBox="0 0 72 72"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#a855f7"/></linearGradient></defs><rect width="72" height="72" rx="16" fill="#0b0f19"/><rect x="10" y="13" width="9" height="46" rx="3" fill="url(#lg)"/><rect x="12" y="17" width="5" height="7" rx="1" fill="#0b0f19"/><rect x="12" y="29" width="5" height="7" rx="1" fill="#0b0f19"/><rect x="12" y="41" width="5" height="7" rx="1" fill="#0b0f19"/><polygon points="24,13 24,59 58,36" fill="url(#lg)"/><path d="M62 24 Q70 36 62 48" fill="none" stroke="#22d3ee" stroke-width="3" stroke-linecap="round"/><circle cx="58" cy="15" r="3.5" fill="#facc15"/></svg>
+            <span class="pm-logo">PIXAMEDIA</span>
+            <span class="text-gray-600 text-sm font-mono">/ Sandbox</span>
+        </a>
+        <div class="flex items-center gap-3">
+            <a href="/api.html" class="text-gray-500 hover:text-white text-sm transition">API Docs</a>
+            <a href="/" class="text-gray-500 hover:text-white text-sm transition">← Back</a>
+        </div>
+    </div>
+</header>
+
+<main class="max-w-6xl mx-auto px-4 py-10">
+
+    <!-- Hero -->
+    <div class="text-center mb-10">
+        <div class="inline-flex items-center gap-2 bg-green-500/10 border border-green-500/20 text-green-400 text-xs font-bold px-3 py-1 rounded-full mb-4">
+            <i class="fa-solid fa-flask"></i>
+            <span>Free Sandbox — No API Key Required</span>
+        </div>
+        <h1 class="text-3xl font-black text-white mb-3">Test the PixaMedia API</h1>
+        <p class="text-gray-400 text-sm max-w-xl mx-auto">10 sample assets available for free testing. No sign-up required. Perfect for developers building integrations.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- LEFT: Sandbox Key + Tester -->
+        <div class="space-y-5">
+
+            <!-- Sandbox Key -->
+            <div class="card">
+                <h3 class="text-sm font-bold text-gray-300 mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-key text-yellow-400"></i>
+                    Sandbox API Key
+                </h3>
+                <div class="sandbox-key mb-3">pm_sandbox_pixamedia_test_2026</div>
+                <p class="text-xs text-gray-500 mb-2">Use this key for testing. Limited to 10 sample assets.</p>
+                <div class="flex gap-2">
+                    <button onclick="navigator.clipboard.writeText('pm_sandbox_pixamedia_test_2026').then(()=>showToast('Key copied!'))" class="btn-cyan text-xs px-4 py-2">
+                        <i class="fa-solid fa-copy mr-1"></i>Copy Key
+                    </button>
+                    <a href="/api.html" class="bg-gray-800 text-gray-300 hover:text-white text-xs px-4 py-2 rounded-xl border border-gray-700 transition flex items-center">
+                        Get Real Key →
+                    </a>
+                </div>
+            </div>
+
+            <!-- API Tester -->
+            <div class="card">
+                <h3 class="text-sm font-bold text-gray-300 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-play text-cyan-400"></i>
+                    Interactive API Tester
+                </h3>
+
+                <div class="space-y-3 mb-4">
+                    <div>
+                        <label class="text-xs text-gray-500 mb-1 block">Endpoint</label>
+                        <select id="endpoint-select" class="w-full" onchange="updateExample()">
+                            <option value="search">GET /v1/search</option>
+                            <option value="assets">GET /v1/assets/{id}</option>
+                            <option value="categories">GET /v1/categories</option>
+                            <option value="trending">GET /v1/trending</option>
+                            <option value="new">GET /v1/new</option>
+                            <option value="me">GET /v1/me</option>
+                        </select>
+                    </div>
+                    <div id="search-params">
+                        <label class="text-xs text-gray-500 mb-1 block">Search Query</label>
+                        <input type="text" id="search-query" value="nature cinematic" class="w-full" placeholder="e.g. dark forest night">
+                    </div>
+                    <div id="asset-params" class="hidden">
+                        <label class="text-xs text-gray-500 mb-1 block">Asset ID</label>
+                        <select id="asset-id" class="w-full">
+                            <option value="1">1 — Nature Cinematic</option>
+                            <option value="2">2 — Horror Ambient</option>
+                            <option value="3">3 — Epic History Music</option>
+                            <option value="4">4 — Cyberpunk City</option>
+                            <option value="5">5 — Lion Hunt 4K</option>
+                        </select>
+                    </div>
+                    <button onclick="runTest()" id="run-btn" class="btn-cyan w-full py-2.5 text-sm flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-play text-xs"></i>Run Request
+                    </button>
+                </div>
+
+                <!-- Result -->
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <label class="text-xs text-gray-500 font-semibold uppercase tracking-wider">Response</label>
+                        <span id="response-status" class="text-xs font-bold"></span>
+                    </div>
+                    <div id="result-box" class="result-box text-gray-600">
+// Click "Run Request" to see the response
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT: Sample Assets + Docs -->
+        <div class="space-y-5">
+
+            <!-- Sample Assets -->
+            <div class="card">
+                <h3 class="text-sm font-bold text-gray-300 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-photo-film text-purple-400"></i>
+                    10 Sample Assets
+                    <span class="text-xs bg-green-500/10 text-green-400 border border-green-500/20 px-2 py-0.5 rounded-full ml-auto">Free</span>
+                </h3>
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between py-1.5 border-b border-gray-800">
+                        <div><p class="text-xs font-semibold text-white">Nature Cinematic Loop</p><p class="text-[10px] text-gray-500">ID: 1 · 4K Video · Nature</p></div>
+                        <span class="text-[10px] bg-cyan-500/10 text-cyan-400 px-2 py-0.5 rounded">VIDEO</span>
+                    </div>
+                    <div class="flex items-center justify-between py-1.5 border-b border-gray-800">
+                        <div><p class="text-xs font-semibold text-white">Horror Ambient Sound</p><p class="text-[10px] text-gray-500">ID: 2 · Audio · Horror</p></div>
+                        <span class="text-[10px] bg-purple-500/10 text-purple-400 px-2 py-0.5 rounded">AUDIO</span>
+                    </div>
+                    <div class="flex items-center justify-between py-1.5 border-b border-gray-800">
+                        <div><p class="text-xs font-semibold text-white">Epic History Music</p><p class="text-[10px] text-gray-500">ID: 3 · Music · History</p></div>
+                        <span class="text-[10px] bg-purple-500/10 text-purple-400 px-2 py-0.5 rounded">MUSIC</span>
+                    </div>
+                    <div class="flex items-center justify-between py-1.5 border-b border-gray-800">
+                        <div><p class="text-xs font-semibold text-white">Cyberpunk City Night</p><p class="text-[10px] text-gray-500">ID: 4 · 4K Video · Future</p></div>
+                        <span class="text-[10px] bg-cyan-500/10 text-cyan-400 px-2 py-0.5 rounded">VIDEO</span>
+                    </div>
+                    <div class="flex items-center justify-between py-1.5 border-b border-gray-800">
+                        <div><p class="text-xs font-semibold text-white">Lion Hunt Golden Hour</p><p class="text-[10px] text-gray-500">ID: 5 · 4K Video · Wild</p></div>
+                        <span class="text-[10px] bg-cyan-500/10 text-cyan-400 px-2 py-0.5 rounded">VIDEO</span>
+                    </div>
+                    <div class="flex items-center justify-between py-1.5 border-b border-gray-800">
+                        <div><p class="text-xs font-semibold text-white">Mecca Aerial Drone</p><p class="text-[10px] text-gray-500">ID: 6 · 8K Video · Islamic</p></div>
+                        <span class="text-[10px] bg-cyan-500/10 text-cyan-400 px-2 py-0.5 rounded">VIDEO</span>
+                    </div>
+                    <div class="flex items-center justify-between py-1.5 border-b border-gray-800">
+                        <div><p class="text-xs font-semibold text-white">Space Galaxy 4K</p><p class="text-[10px] text-gray-500">ID: 7 · 4K Video · Space</p></div>
+                        <span class="text-[10px] bg-cyan-500/10 text-cyan-400 px-2 py-0.5 rounded">VIDEO</span>
+                    </div>
+                    <div class="flex items-center justify-between py-1.5 border-b border-gray-800">
+                        <div><p class="text-xs font-semibold text-white">Kids Magic Forest</p><p class="text-[10px] text-gray-500">ID: 8 · 4K Video · Kids</p></div>
+                        <span class="text-[10px] bg-cyan-500/10 text-cyan-400 px-2 py-0.5 rounded">VIDEO</span>
+                    </div>
+                    <div class="flex items-center justify-between py-1.5 border-b border-gray-800">
+                        <div><p class="text-xs font-semibold text-white">Luxury Supercar</p><p class="text-[10px] text-gray-500">ID: 9 · 4K Video · Luxury</p></div>
+                        <span class="text-[10px] bg-cyan-500/10 text-cyan-400 px-2 py-0.5 rounded">VIDEO</span>
+                    </div>
+                    <div class="flex items-center justify-between py-1.5">
+                        <div><p class="text-xs font-semibold text-white">Motivation Sunrise</p><p class="text-[10px] text-gray-500">ID: 10 · 4K Video · Motivation</p></div>
+                        <span class="text-[10px] bg-cyan-500/10 text-cyan-400 px-2 py-0.5 rounded">VIDEO</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Limits -->
+            <div class="card">
+                <h3 class="text-sm font-bold text-gray-300 mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-gauge text-yellow-400"></i>
+                    Sandbox Limits
+                </h3>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between"><span class="text-gray-500">Assets available</span><span class="text-white font-bold">10 sample assets</span></div>
+                    <div class="flex justify-between"><span class="text-gray-500">API calls/day</span><span class="text-white font-bold">100 requests</span></div>
+                    <div class="flex justify-between"><span class="text-gray-500">Max quality</span><span class="text-white font-bold">720p watermarked</span></div>
+                    <div class="flex justify-between"><span class="text-gray-500">Commercial use</span><span class="text-red-400 font-bold">❌ Not allowed</span></div>
+                    <div class="flex justify-between"><span class="text-gray-500">Real API access</span><span class="text-cyan-400 font-bold">$30/month →</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div id="sandbox-toast" style="position:fixed;bottom:24px;right:24px;z-index:9999;padding:10px 16px;border-radius:8px;font-size:13px;font-weight:600;opacity:0;transition:opacity .3s;background:#052e16;border:1px solid #166534;color:#4ade80"></div>
+
+<script>
+const SANDBOX_KEY = 'pm_sandbox_pixamedia_test_2026';
+const SUPABASE_URL = 'https://qxawiooxixrkhjauibxw.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4YXdpb294aXhya2hqYXVpYnh3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4MjczMTYsImV4cCI6MjA5NTQwMzMxNn0.UfDPc-_tr45TbN9eZace4g9Sy5_1vqMGbbSit_VutKM';
+
+// Sandbox sabit veri
+const SANDBOX_ASSETS = [
+    {id:1, title:"Nature Cinematic Loop", type:"video", category:"Nature", quality:"4K", duration:15, tags:["nature","cinematic","4k"], file_url:"https://pub-6669f81cb954493ca506b7b50e2829bf.r2.dev/videos/nature/sample1.mp4", downloads:247},
+    {id:2, title:"Horror Ambient Sound", type:"audio", category:"Horror", quality:"", duration:60, tags:["horror","ambient","dark"], file_url:"https://pub-6669f81cb954493ca506b7b50e2829bf.r2.dev/audio/horror/sample2.mp3", downloads:183},
+    {id:3, title:"Epic History Music", type:"audio", category:"History", quality:"", duration:90, tags:["epic","orchestral","history"], file_url:"https://pub-6669f81cb954493ca506b7b50e2829bf.r2.dev/audio/history/sample3.mp3", downloads:312},
+    {id:4, title:"Cyberpunk City Night", type:"video", category:"Future", quality:"4K", duration:20, tags:["cyberpunk","neon","city"], file_url:"https://pub-6669f81cb954493ca506b7b50e2829bf.r2.dev/videos/future/sample4.mp4", downloads:891},
+    {id:5, title:"Lion Hunt Golden Hour", type:"video", category:"Wild", quality:"4K", duration:30, tags:["lion","wildlife","4k"], file_url:"https://pub-6669f81cb954493ca506b7b50e2829bf.r2.dev/videos/wild/sample5.mp4", downloads:1204},
+    {id:6, title:"Mecca Aerial Drone", type:"video", category:"Islamic", quality:"8K", duration:25, tags:["mecca","islamic","drone"], file_url:"https://pub-6669f81cb954493ca506b7b50e2829bf.r2.dev/videos/islamic/sample6.mp4", downloads:567},
+    {id:7, title:"Space Galaxy 4K", type:"video", category:"Space", quality:"4K", duration:18, tags:["space","galaxy","cosmos"], file_url:"https://pub-6669f81cb954493ca506b7b50e2829bf.r2.dev/videos/space/sample7.mp4", downloads:743},
+    {id:8, title:"Kids Magic Forest", type:"video", category:"Kids", quality:"4K", duration:12, tags:["kids","magic","colorful"], file_url:"https://pub-6669f81cb954493ca506b7b50e2829bf.r2.dev/videos/kids/sample8.mp4", downloads:428},
+    {id:9, title:"Luxury Supercar", type:"video", category:"Luxury", quality:"4K", duration:15, tags:["luxury","car","cinematic"], file_url:"https://pub-6669f81cb954493ca506b7b50e2829bf.r2.dev/videos/luxury/sample9.mp4", downloads:634},
+    {id:10, title:"Motivation Sunrise", type:"video", category:"Motivation", quality:"4K", duration:20, tags:["motivation","sunrise","epic"], file_url:"https://pub-6669f81cb954493ca506b7b50e2829bf.r2.dev/videos/motivation/sample10.mp4", downloads:389},
+];
+
+function showToast(msg) {
+    const el = document.getElementById('sandbox-toast');
+    el.textContent = msg;
+    el.style.opacity = '1';
+    clearTimeout(el._t);
+    el._t = setTimeout(() => el.style.opacity = '0', 2500);
+}
+
+function updateExample() {
+    const ep = document.getElementById('endpoint-select').value;
+    document.getElementById('search-params').classList.toggle('hidden', ep !== 'search');
+    document.getElementById('asset-params').classList.toggle('hidden', ep !== 'assets');
+}
+
+async function runTest() {
+    const ep = document.getElementById('endpoint-select').value;
+    const btn = document.getElementById('run-btn');
+    const resultBox = document.getElementById('result-box');
+    const statusEl = document.getElementById('response-status');
+
+    btn.innerHTML = '<i class="fa-solid fa-spinner spin text-xs"></i> Running...';
+    btn.disabled = true;
+
+    await new Promise(r => setTimeout(r, 600));
+
+    let response = {};
+    let status = '200 OK';
+
+    try {
+        switch(ep) {
+            case 'search':
+                const query = document.getElementById('search-query').value.toLowerCase();
+                const results = SANDBOX_ASSETS.filter(a => 
+                    a.title.toLowerCase().includes(query) ||
+                    a.tags.some(t => t.includes(query)) ||
+                    a.category.toLowerCase().includes(query)
+                );
+                response = { success: true, total: results.length, limit: 10, offset: 0, sandbox: true, results };
+                break;
+            case 'assets':
+                const id = parseInt(document.getElementById('asset-id').value);
+                const asset = SANDBOX_ASSETS.find(a => a.id === id);
+                response = asset ? { success: true, sandbox: true, ...asset } : { success: false, error: 'Asset not found' };
+                break;
+            case 'categories':
+                response = { success: true, sandbox: true, categories: ['Nature','Horror','History','Future','Wild','Islamic','Space','Kids','Luxury','Motivation'] };
+                break;
+            case 'trending':
+                response = { success: true, sandbox: true, results: [...SANDBOX_ASSETS].sort((a,b) => b.downloads-a.downloads).slice(0,5) };
+                break;
+            case 'new':
+                response = { success: true, sandbox: true, results: SANDBOX_ASSETS.slice(0,5) };
+                break;
+            case 'me':
+                response = { success: true, sandbox: true, plan: 'sandbox', api_key: SANDBOX_KEY, calls_today: Math.floor(Math.random()*20), calls_total: Math.floor(Math.random()*100), limit_daily: 100 };
+                break;
+        }
+
+        statusEl.textContent = status;
+        statusEl.className = 'text-xs font-bold text-green-400';
+        resultBox.textContent = JSON.stringify(response, null, 2);
+        resultBox.style.color = '#9ca3af';
+
+    } catch(e) {
+        statusEl.textContent = '500 Error';
+        statusEl.className = 'text-xs font-bold text-red-400';
+        resultBox.textContent = JSON.stringify({ success: false, error: e.message }, null, 2);
+    }
+
+    btn.innerHTML = '<i class="fa-solid fa-play text-xs"></i> Run Request';
+    btn.disabled = false;
+}
+</script>
+</body>
+</html>
