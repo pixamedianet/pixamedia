@@ -1297,6 +1297,22 @@ async function sendContactForm(){
 handleAuthCallback();
 loadFoundingCount();
 </script>
+    <script>
+(async function() {
+  try {
+    const res = await fetch('https://qxawiooxixrkhjauibxw.supabase.co/rest/v1/profiles?select=count', {
+      headers: {
+        'apikey': 'sb_secret_QiziJQRtQRGvc6OQV3u9ew_OnzJChA2',
+        'Prefer': 'count=exact'
+      }
+    });
+    const count = parseInt(res.headers.get('content-range').split('/')[1] || '0');
+    const remaining = Math.max(500 - count, 0);
+    const el = document.getElementById('founding-count');
+    if (el) el.textContent = remaining + ' left';
+  } catch(e) {}
+})();
+</script>
 
 </body>
 </html>
