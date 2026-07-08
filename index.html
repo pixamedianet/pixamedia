@@ -159,11 +159,11 @@
             </div>
             <button id="hdr-signin" onclick="hdrSignInClick()" class="text-gray-400 hover:text-white text-sm font-medium transition cursor-pointer">Sign In</button>
             <!-- API BUTONU — GUMROAD -->
-            <a href="https://pixamedia.gumroad.com/l/cnuuv" target="_blank" class="bg-gray-800 hover:bg-gray-700 text-cyan-400 font-bold px-3 py-1.5 rounded-lg text-sm flex items-center gap-1.5 transition border border-cyan-500/30">
+            <a href="https://pixamedia.gumroad.com/l/cnuuv" data-gumroad-single-product="true" class="bg-gray-800 hover:bg-gray-700 text-cyan-400 font-bold px-3 py-1.5 rounded-lg text-sm flex items-center gap-1.5 transition border border-cyan-500/30">
                 <i class="fa-solid fa-code text-xs"></i>API — $30/mo
             </a>
             <!-- VIP BUTONU — GUMROAD -->
-            <a href="https://pixamedia.gumroad.com/l/ytzukr" target="_blank" class="pulse-vip btn-vip text-sm px-4 py-1.5">
+            <a href="https://pixamedia.gumroad.com/l/ytzukr" data-gumroad-single-product="true" class="pulse-vip btn-vip text-sm px-4 py-1.5">
                 <i class="fa-solid fa-crown mr-1 text-yellow-300 text-xs"></i>VIP — $5/mo
             </a>
         </div>
@@ -175,8 +175,8 @@
     <div id="mob-menu" class="md:hidden border-t border-gray-800 mt-3 pt-3 pb-2 px-1">
         <div class="flex flex-col gap-1.5">
             <button onclick="openModal('signin-modal')" class="text-left text-gray-300 py-2 px-3 rounded-lg hover:bg-gray-800 transition text-sm font-medium"><i class="fa-regular fa-user mr-2 text-cyan-400"></i>Sign In / Register</button>
-            <a href="https://pixamedia.gumroad.com/l/ytzukr" target="_blank" class="text-left text-yellow-400 font-bold py-2 px-3 rounded-lg hover:bg-gray-800 transition text-sm"><i class="fa-solid fa-crown mr-2"></i>VIP — $5/mo</a>
-            <a href="https://pixamedia.gumroad.com/l/cnuuv" target="_blank" class="text-left text-cyan-400 font-bold py-2 px-3 rounded-lg hover:bg-gray-800 transition text-sm"><i class="fa-solid fa-code mr-2"></i>API — $30/mo</a>
+            <a href="https://pixamedia.gumroad.com/l/ytzukr" data-gumroad-single-product="true" class="text-left text-yellow-400 font-bold py-2 px-3 rounded-lg hover:bg-gray-800 transition text-sm"><i class="fa-solid fa-crown mr-2"></i>VIP — $5/mo</a>
+            <a href="https://pixamedia.gumroad.com/l/cnuuv" data-gumroad-single-product="true" class="text-left text-cyan-400 font-bold py-2 px-3 rounded-lg hover:bg-gray-800 transition text-sm"><i class="fa-solid fa-code mr-2"></i>API — $30/mo</a>
             <div class="border-t border-gray-800 pt-2 mt-1">
                 <p class="text-[11px] text-gray-600 px-3 mb-2 uppercase tracking-wider">Language</p>
                 <div class="grid grid-cols-4 gap-1">
@@ -1321,5 +1321,6 @@ const assetCount = parseInt(assetRes.headers.get('content-range').split('/')[1] 
 const assetEl = document.getElementById('total-assets-count');
 const rounded = Math.floor(assetCount / 100) * 100;
 if (assetEl) assetEl.textContent = rounded.toLocaleString() + '+ assets';
+<script src="https://gumroad.com/js/gumroad.js"></script>    
 </body>
 </html>
