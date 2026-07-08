@@ -359,7 +359,7 @@
         <div id="asset-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
         <div class="mt-6 py-8 border border-dashed border-gray-800 rounded-2xl text-center bg-gray-900/20">
             <i class="fa-solid fa-robot text-xl text-cyan-400/40 mb-2 block"></i>
-            <p class="text-gray-600 text-sm">AI content pipeline loading — <span class="text-cyan-400/70 font-semibold">1,000+ assets coming soon</span></p>
+            <p class="text-gray-600 text-sm">AI content pipeline loading — <span id="total-assets-count" class="text-cyan-400/70 font-semibold">2,000+ assets</span></p>
         </div>
     </div>
 
@@ -1313,6 +1313,12 @@ loadFoundingCount();
   } catch(e) {}
 })();
 </script>
-
+// Total assets sayaci
+const assetRes = await fetch('https://qxawiooxixrkhjauibxw.supabase.co/rest/v1/contents?select=count', {
+  headers: { 'apikey': 'sb_publishable_QpCYzbgkJoBG7yKr292leg_0AkRW-c0', 'Prefer': 'count=exact' }
+});
+const assetCount = parseInt(assetRes.headers.get('content-range').split('/')[1] || '0');
+const assetEl = document.getElementById('total-assets-count');
+if (assetEl) assetEl.textContent = assetCount.toLocaleString() + '+ assets';
 </body>
 </html>
