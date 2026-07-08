@@ -1082,7 +1082,7 @@ async function loadContents(category='',search='',filter=''){
         }
 
         if(category&&category!=='All')url+=`&category=eq.${encodeURIComponent(category)}`;
-        if(search)url+=`&title=ilike.*${encodeURIComponent(search)}*`;
+        if(search)url+=`&or=(title.ilike.*${encodeURIComponent(search)}*,subcategory.ilike.*${encodeURIComponent(search)}*,category.ilike.*${encodeURIComponent(search)}*)`;
         // Tab filtresi (video/image/audio)
         if(currentTab&&currentTab!=='all') url+=`&type=eq.${currentTab}`;
 
