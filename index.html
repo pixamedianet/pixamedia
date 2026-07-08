@@ -1319,6 +1319,7 @@ const assetRes = await fetch('https://qxawiooxixrkhjauibxw.supabase.co/rest/v1/c
 });
 const assetCount = parseInt(assetRes.headers.get('content-range').split('/')[1] || '0');
 const assetEl = document.getElementById('total-assets-count');
-if (assetEl) assetEl.textContent = assetCount.toLocaleString() + '+ assets';
+const rounded = Math.floor(assetCount / 100) * 100;
+if (assetEl) assetEl.textContent = rounded.toLocaleString() + '+ assets';
 </body>
 </html>
