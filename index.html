@@ -1053,12 +1053,11 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelect
 let currentPage = 1;
 const PAGE_SIZE = 50;
 
-async function loadContents(category='',search='',filter='',page=1){
+async function loadContents(category='',search='',filter=''){
     const grid=document.getElementById('asset-grid');
     grid.innerHTML='<div class="col-span-4 text-center py-12"><i class="fa-solid fa-spinner spin text-2xl text-cyan-400"></i><p class="text-gray-500 mt-3 text-sm">Loading assets...</p></div>';
     try{
-        const offset = (page - 1) * PAGE_SIZE;
-let url=`${SUPABASE_URL}/rest/v1/contents?select=*&limit=${PAGE_SIZE}&offset=${offset}`;
+        let url=`${SUPABASE_URL}/rest/v1/contents?select=*`;
 
         // Filtre bazlı sıralama
         if(filter==='new'){
