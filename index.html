@@ -1312,7 +1312,6 @@ loadFoundingCount();
     if (el) el.textContent = remaining + ' left';
   } catch(e) {}
 })();
-</script>
 // Total assets sayaci
 const assetRes = await fetch('https://qxawiooxixrkhjauibxw.supabase.co/rest/v1/contents?select=count', {
   headers: { 'apikey': 'sb_publishable_QpCYzbgkJoBG7yKr292leg_0AkRW-c0', 'Prefer': 'count=exact' }
@@ -1321,6 +1320,7 @@ const assetCount = parseInt(assetRes.headers.get('content-range').split('/')[1] 
 const assetEl = document.getElementById('total-assets-count');
 const rounded = Math.floor(assetCount / 100) * 100;
 if (assetEl) assetEl.textContent = rounded.toLocaleString() + '+ assets';
-<script src="https://gumroad.com/js/gumroad.js"></script>    
+<script src="https://gumroad.com/js/gumroad.js"></script>
+</script>    
 </body>
 </html>
