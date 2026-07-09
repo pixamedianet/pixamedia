@@ -1054,49 +1054,113 @@ let currentPage = 1;
 const PAGE_SIZE = 50;
 
 async function loadContents(category='',search='',filter=''){
-   async function loadContents(category='',search='',filter='',page=1){
     const grid=document.getElementById('asset-grid');
     grid.innerHTML='<div class="col-span-4 text-center py-12"><i class="fa-solid fa-spinner spin text-2xl text-cyan-400"></i><p class="text-gray-500 mt-3 text-sm">Loading assets...</p></div>';
     try{
-        let url=`${SUPABASE_URL}/rest/v1/contents?select=*&limit=50&offset=${(page-1)*50}`;
-        if(filter==='new'){const today=new Date();today.setHours(0,0,0,0);url+=`&created_at=gte.${today.toISOString()}&order=created_at.desc`;}
-        else if(filter==='popular'){url+=`&order=downloads.desc`;}
-        else if(filter==='week'){const week=new Date();week.setDate(week.getDate()-7);url+=`&created_at=gte.${week.toISOString()}&order=created_at.desc`;}
-        else if(filter==='4k'){url+=`&quality=eq.4K&order=created_at.desc`;}
-        else if(filter==='8k'){url+=`&quality=eq.8K&order=created_at.desc`;}
-        else if(filter==='vertical'){url+=`&format=eq.vertical&order=created_at.desc`;}
-        else if(filter==='horizontal'){url+=`&format=eq.horizontal&order=created_at.desc`;}
-        else{url+=`&order=created_at.desc`;}
+        let url=`${SUPABASE_URL}/rest/v1/contents?select=*`;
+
+        // Filtre bazlı sıralama
+        if(filter==='new'){
+            // Bu gün eklenenler
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            url+=`&created_at=gte.${today.toISOString()}&order=created_at.desc`;
+        } else if(filter==='popular'){
+            // En çok indirilenler
+            url+=`&order=downloads.desc`;
+        } else if(filter==='week'){
+            // Bu hafta eklenenler
+            const week = new Date();
+            week.setDate(week.getDate()-7);
+            url+=`&created_at=gte.${week.toISOString()}&order=created_at.desc`;
+        } else if(filter==='4k'){
+            url+=`&quality=eq.4K&order=created_at.desc`;
+        } else if(filter==='8k'){
+            url+=`&quality=eq.8K&order=created_at.desc`;
+        } else if(filter==='vertical'){
+            url+=`&format=eq.vertical&order=created_at.desc`;
+        } else if(filter==='horizontal'){
+            url+=`&format=eq.horizontal&order=created_at.desc`;
+        } else {
+            url+=`&order=created_at.desc`;
+        }
+
         if(category&&category!=='All')url+=`&category=eq.${encodeURIComponent(category)}`;
         if(search)url+=`&or=(title.ilike.*${encodeURIComponent(search)}*,subcategory.ilike.*${encodeURIComponent(search)}*,category.ilike.*${encodeURIComponent(search)}*)`;
-        if(currentTab&&currentTab!=='all')url+=`&type=eq.${currentTab}`;
-        const res=await fetch(url,{method:'GET',headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`,'Content-Type':'application/json','Accept':'application/json','Prefer':'count=exact'},mode:'cors'});
+        // Tab filtresi (video/image/audio)
+        if(currentTab&&currentTab!=='all') url+=`&type=eq.${currentTab}`;
+
+        const res=await fetch(url,{method:'GET',headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`,'Content-Type':'application/json','Accept':'application/json'},mode:'cors'});
         if(!res.ok)throw new Error(`HTTP ${res.status}`);
-        const totalCount=parseInt(res.headers.get('content-range')?.split('/')[1]||'0');
-        const totalPages=Math.ceil(totalCount/50);
         const data=await res.json();
         if(!data||data.length===0){
-            if(category&&category!=='All'){
-                grid.innerHTML=`<div class="col-span-4 text-center py-16"><i class="fa-solid fa-robot text-4xl text-cyan-400/30 mb-4 block"></i><p class="text-gray-400 font-semibold text-sm mb-1">No content yet in "${category}"</p><p class="text-gray-600 text-xs">Our AI is working on it! Check back soon 🚀</p><p class="text-gray-700 text-xs mt-2">New assets added daily after launch</p></div>`;
+            if(category && category!=='All'){
+                grid.innerHTML=`
+                <div class="col-span-4 text-center py-16">
+                    <i class="fa-solid fa-robot text-4xl text-cyan-400/30 mb-4 block"></i>
+                    <p class="text-gray-400 font-semibold text-sm mb-1">No content yet in "${category}"</p>
+                    <p class="text-gray-600 text-xs">Our AI is working on it! Check back soon 🚀</p>
+                    <p class="text-gray-700 text-xs mt-2">New assets added daily after launch</p>
+                </div>`;
                 document.getElementById('result-count').textContent='0 assets';
-            }else{showDemoCards();}
-            document.getElementById('pagination').innerHTML='';
+            } else {
+                showDemoCards();
+            }
             return;
         }
         grid.innerHTML='';
-        const filterLabel=filter==='new'?'🆕 Today\'s New':filter==='popular'?'🔥 Popular':filter==='week'?'📅 This Week':'';
-        document.getElementById('result-count').textContent=totalCount+' assets'+(filterLabel?' · '+filterLabel:'');
+
+        // Sonuç sayısı + filtre bilgisi
+        const filterLabel = filter==='new'?'🆕 Today\'s New':filter==='popular'?'🔥 Popular':filter==='week'?'📅 This Week':'';
+        document.getElementById('result-count').textContent=data.length+' assets'+(filterLabel?' · '+filterLabel:'');
+
         data.forEach(item=>{const card=createCard(item);grid.appendChild(card);});
-        if(totalPages>1){
-            let html='<div class="flex items-center justify-center gap-2 mt-6 flex-wrap">';
-            if(page>1)html+=`<button onclick="loadContents('${category}','${search}','${filter}',${page-1})" class="px-3 py-1.5 bg-gray-800 text-gray-300 rounded-lg text-sm hover:bg-gray-700">← Prev</button>`;
-            for(let i=Math.max(1,page-2);i<=Math.min(totalPages,page+2);i++){html+=`<button onclick="loadContents('${category}','${search}','${filter}',${i})" class="px-3 py-1.5 ${i===page?'bg-cyan-500 text-white':'bg-gray-800 text-gray-300 hover:bg-gray-700'} rounded-lg text-sm">${i}</button>`;}
-            if(page<totalPages)html+=`<button onclick="loadContents('${category}','${search}','${filter}',${page+1})" class="px-3 py-1.5 bg-gray-800 text-gray-300 rounded-lg text-sm hover:bg-gray-700">Next →</button>`;
-            html+=`<span class="text-gray-600 text-xs ml-2">Page ${page}/${totalPages}</span></div>`;
-            document.getElementById('pagination').innerHTML=html;
-        }else{document.getElementById('pagination').innerHTML='';}
-        window.scrollTo({top:400,behavior:'smooth'});
     }catch(err){console.error('Supabase error:',err);showDemoCards();}
+}
+
+function createCard(item){
+    const div=document.createElement('div');
+    div.className='asset-card lazy-card bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden flex flex-col h-64';
+    div.dataset.title=item.title||'';div.dataset.category=item.category||'';div.dataset.type=item.type||'video';
+    div.dataset.quality=item.quality||'';div.dataset.tags=(item.tags||[]).join(',');div.dataset.prompt=item.description||'';
+    div.dataset.desc=item.description||'';div.dataset.hashtags='#'+(item.tags||[]).join(' #');
+    div.dataset.duration=item.duration?formatDuration(item.duration):'';div.dataset.file=item.file_url||'';
+    const isNew=isNewContent(item.created_at);
+    const qualityBadge=item.quality?`<span class="badge badge-${item.quality.toLowerCase()}">${item.quality}</span>`:'';
+    const newBadge=isNew?`<span class="badge badge-new">NEW</span>`:'';
+    const duration=item.duration?formatDuration(item.duration):'';
+    const thumbStyle=item.type==='image'&&item.file_url?`background-image:url('${item.file_url}');background-size:cover;background-position:center`:item.thumbnail_url?`background-image:url('${item.thumbnail_url}');background-size:cover;background-position:center`:'background:linear-gradient(135deg,#0f172a,#1e293b)';
+    const videoPreview=item.type==='video'&&(item.preview_url||item.file_url)?`<video class="card-video" src="${item.preview_url||item.file_url}" muted loop playsinline preload="none"></video>`:'';
+    div.innerHTML=`
+        <div class="card-top-badges"><div class="flex gap-1">${qualityBadge}${newBadge}</div>${duration?`<span class="text-[10px] text-white/40 font-mono bg-black/40 px-1.5 py-0.5 rounded">${duration}</span>`:''}</div>
+        <div class="card-actions"><div class="card-action-btn" onclick="toggleFav(this,event)"><i class="fa-heart fa-regular"></i></div><div class="card-action-btn" onclick="copyCardPrompt(this,event)"><i class="fa-solid fa-copy"></i></div></div>
+        <div class="flex-grow flex items-center justify-center relative h-full overflow-hidden" style="${thumbStyle}">${videoPreview}${item.type==='audio'?'<i class="fa-solid fa-music text-3xl text-purple-400 z-10 relative"></i>':item.type==='image'?'':'<i class="fa-solid fa-circle-play text-3xl text-white/30 z-10 relative"></i>'}<div class="absolute bottom-2 right-2 text-[8px] text-white/15 font-mono select-none z-10">pixamedia.net</div></div>
+        <div class="p-3 bg-gray-900 border-t border-gray-800/50 z-10"><span class="text-[10px] ${item.type==='audio'?'bg-purple-500/10 text-purple-400':item.type==='image'?'bg-emerald-500/10 text-emerald-400':'bg-cyan-500/10 text-cyan-400'} font-bold px-2 py-0.5 rounded">${item.quality?item.quality+' ':''}${item.type==='audio'?'AUDIO':item.type==='image'?'IMAGE':'VIDEO'}</span><h4 class="text-xs font-semibold truncate mt-1 text-gray-200">${item.title}</h4><p class="text-[10px] text-gray-600 mt-0.5 flex items-center gap-1"><i class="fa-solid fa-download text-[9px]"></i> ${item.downloads||0} downloads</p></div>`;
+    if(item.file_url&&item.type!=='audio'){div.addEventListener('mouseenter',function(){const vid=this.querySelector('.card-video');if(vid){vid.load();vid.play().catch(()=>{});}});div.addEventListener('mouseleave',function(){const vid=this.querySelector('.card-video');if(vid){vid.pause();vid.currentTime=0;}});}
+    div.addEventListener('click',function(e){if(e.target.closest('.card-action-btn'))return;openAssetModal(div);});
+    setTimeout(()=>div.classList.add('visible'),50);
+    return div;
+}
+
+function formatDuration(seconds){if(!seconds)return '';const m=Math.floor(seconds/60);const s=seconds%60;return `${m}:${s.toString().padStart(2,'0')}`;}
+function isNewContent(dateStr){if(!dateStr)return false;const created=new Date(dateStr);const now=new Date();const diff=(now-created)/(1000*60*60*24);return diff<7;}
+
+function showDemoCards(){
+    const grid=document.getElementById('asset-grid');
+    grid.innerHTML=`
+        <div class="asset-card lazy-card bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden flex flex-col h-64 visible" data-category="Future" data-type="video" data-quality="4k" data-tags="cyberpunk,neon,city,night,vertical,new,popular" data-title="Dark Cyberpunk Street Loop" data-prompt="cyberpunk neon street, rainy night, cinematic 8k" data-desc="A cinematic loop of a rainy cyberpunk street at night." data-hashtags="#cyberpunk #neon #cinematic" data-duration="0:15">
+            <div class="card-top-badges"><div class="flex gap-1"><span class="badge badge-4k">4K</span><span class="badge badge-new">NEW</span></div><span class="text-[10px] text-white/40 font-mono bg-black/40 px-1.5 py-0.5 rounded">0:15</span></div>
+            <div class="card-actions"><div class="card-action-btn" onclick="toggleFav(this,event)"><i class="fa-heart fa-regular"></i></div><div class="card-action-btn" onclick="copyCardPrompt(this,event)"><i class="fa-solid fa-copy"></i></div></div>
+            <div class="flex-grow bg-gradient-to-br from-slate-900 to-blue-950 flex items-center justify-center relative"><i class="fa-solid fa-circle-play text-3xl text-white/30"></i><div class="absolute bottom-2 right-2 text-[8px] text-white/15 font-mono">pixamedia.net</div></div>
+            <div class="p-3 bg-gray-900 border-t border-gray-800/50"><span class="text-[10px] bg-cyan-500/10 text-cyan-400 font-bold px-2 py-0.5 rounded">4K VIDEO</span><h4 class="text-xs font-semibold truncate mt-1 text-gray-200">Dark Cyberpunk Street Loop</h4><p class="text-[10px] text-gray-600 mt-0.5"><i class="fa-solid fa-download text-[9px]"></i> 1.2k downloads</p></div>
+        </div>
+        <div class="asset-card lazy-card bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden flex flex-col h-64 visible" data-category="Wild" data-type="video" data-quality="4k" data-tags="wild,lion,animal,safari,popular" data-title="Wild Lion Hunt 4K" data-prompt="african savanna lion hunt, cinematic slow motion" data-desc="Breathtaking slow-motion footage of a lion hunt." data-hashtags="#wildlife #lion #4k #nature" data-duration="0:30">
+            <div class="card-top-badges"><div class="flex gap-1"><span class="badge badge-4k">4K</span><span class="badge badge-popular">🔥 HOT</span></div><span class="text-[10px] text-white/40 font-mono bg-black/40 px-1.5 py-0.5 rounded">0:30</span></div>
+            <div class="card-actions"><div class="card-action-btn" onclick="toggleFav(this,event)"><i class="fa-heart fa-regular"></i></div><div class="card-action-btn" onclick="copyCardPrompt(this,event)"><i class="fa-solid fa-copy"></i></div></div>
+            <div class="flex-grow bg-gradient-to-br from-amber-950/30 to-slate-900 flex items-center justify-center relative"><i class="fa-solid fa-circle-play text-3xl text-white/30"></i><div class="absolute bottom-2 right-2 text-[8px] text-white/15 font-mono">pixamedia.net</div></div>
+            <div class="p-3 bg-gray-900 border-t border-gray-800/50"><span class="text-[10px] bg-amber-500/10 text-amber-400 font-bold px-2 py-0.5 rounded">4K VIDEO</span><h4 class="text-xs font-semibold truncate mt-1 text-gray-200">Wild Lion Hunt 4K</h4><p class="text-[10px] text-gray-600 mt-0.5"><i class="fa-solid fa-download text-[9px]"></i> 2.1k downloads</p></div>
+        </div>`;
+    document.getElementById('result-count').textContent='2 demo assets';
 }
 
 document.getElementById('search-in').addEventListener('keyup',function(){clearTimeout(this._t);this._t=setTimeout(()=>{currentSearch=this.value.toLowerCase().trim();loadContents(currentCat,currentSearch,currentFilter);},400);});
