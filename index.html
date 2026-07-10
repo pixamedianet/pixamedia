@@ -1061,11 +1061,30 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelect
 let currentPage = 1;
 const PAGE_SIZE = 50;
 
+let loadOffset = 0;
+async function loadMore(){
+  loadOffset += 50;
+  const grid = document.getElementById('asset-grid');
+  let url = `${SUPABASE_URL}/rest/v1/contents?select=*&limit=50&offset=${loadOffset}&order=created_at.desc`;
+  if(currentTab&&currentTab!=='all') url+=`&type=eq.${currentTab}`;
+  if(currentCat&&currentCat!=='All') url+=`&category=eq.${encodeURIComponent(currentCat)}`;
+  const res = await fetch(url,{method:'GET',headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`},mode:'cors'});
+  const data = await res.json();
+  const oldBtn = grid.querySelector('button');
+  if(oldBtn) oldBtn.parentElement.remove();
+  data.forEach(item=>{const card=createCard(item);grid.appendChild(card);});
+  if(data.length===50){
+    const btn=document.createElement('div');
+    btn.className='col-span-4 text-center mt-4';
+    btn.innerHTML='<button onclick="loadMore()" class="px-6 py-2 bg-gray-800 text-gray-300 rounded-xl hover:bg-gray-700 transition text-sm">Load More →</button>';
+    grid.appendChild(btn);
+  }
+}    
 async function loadContents(category='',search='',filter=''){
     const grid=document.getElementById('asset-grid');
     grid.innerHTML='<div class="col-span-4 text-center py-12"><i class="fa-solid fa-spinner spin text-2xl text-cyan-400"></i><p class="text-gray-500 mt-3 text-sm">Loading assets...</p></div>';
     try{
-        let url=`${SUPABASE_URL}/rest/v1/contents?select=*`;
+        let url=`${SUPABASE_URL}/rest/v1/contents?select=*&limit=50`;
 
         // Filtre bazlı sıralama
         if(filter==='new'){
@@ -1123,6 +1142,12 @@ async function loadContents(category='',search='',filter=''){
         document.getElementById('result-count').textContent=data.length+' assets'+(filterLabel?' · '+filterLabel:'');
 
         data.forEach(item=>{const card=createCard(item);grid.appendChild(card);});
+        if(data.length===50){
+  const btn=document.createElement('div');
+  btn.className='col-span-4 text-center mt-4';
+  btn.innerHTML='<button onclick="loadMore()" class="px-6 py-2 bg-gray-800 text-gray-300 rounded-xl hover:bg-gray-700 transition text-sm">Load More →</button>';
+  grid.appendChild(btn);
+}
     }catch(err){console.error('Supabase error:',err);showDemoCards();}
 }
 
