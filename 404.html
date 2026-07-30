@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found — PixaMedia</title>
+    <meta name="robots" content="noindex, follow">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body{background:#0b0f19;color:#f3f4f6;font-family:system-ui,-apple-system,sans-serif}
+        .pm-logo{font-size:1.1rem;font-weight:900;letter-spacing:.05em;background:linear-gradient(135deg,#22d3ee,#a855f7);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+        .card{background:#0f172a;border:1px solid #1e293b;border-radius:1rem;padding:1.5rem}
+        .cat-btn{background:#0f172a;border:1px solid #1e293b;border-radius:.75rem;padding:.75rem;text-align:center;transition:.2s;text-decoration:none;display:block}
+        .cat-btn:hover{border-color:#22d3ee;background:#111827}
+        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+        .float{animation:float 3.5s ease-in-out infinite}
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+<header class="border-b border-gray-800 bg-[#0f172a]/90 backdrop-blur-md sticky top-0 z-50 px-4 py-3">
+    <div class="max-w-4xl mx-auto flex items-center justify-between">
+        <a href="/" class="flex items-center gap-2">
+            <svg width="30" height="30" viewBox="0 0 72 72">
+                <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#a855f7"/></linearGradient></defs>
+                <rect width="72" height="72" rx="16" fill="#0b0f19"/>
+                <rect x="10" y="13" width="9" height="46" rx="3" fill="url(#lg)"/>
+                <polygon points="24,13 24,59 58,36" fill="url(#lg)"/>
+            </svg>
+            <span class="pm-logo">PIXAMEDIA</span>
+        </a>
+        <a href="/" class="text-gray-500 hover:text-white text-sm transition">← Back to site</a>
+    </div>
+</header>
+
+<main class="flex-grow flex items-center justify-center px-4 py-16">
+    <div class="max-w-lg w-full text-center">
+        <div class="float mb-6">
+            <i class="fa-solid fa-film text-6xl text-cyan-400/30"></i>
+        </div>
+        <h1 class="text-5xl font-black mb-2" style="background:linear-gradient(135deg,#22d3ee,#a855f7);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">404</h1>
+        <h2 class="text-xl font-bold text-white mb-3">This scene doesn't exist</h2>
+        <p class="text-gray-500 text-sm mb-8">The page you're looking for was moved, deleted, or never existed. But we've got 6,000+ other assets waiting for you.</p>
+
+        <div class="flex items-center justify-center gap-3 mb-10 flex-wrap">
+            <a href="/" class="bg-gradient-to-r from-cyan-500 to-purple-500 text-white font-bold px-6 py-2.5 rounded-xl hover:opacity-90 transition text-sm">
+                <i class="fa-solid fa-house mr-1.5"></i>Back to Home
+            </a>
+            <a href="/#search" class="border border-gray-700 text-gray-300 hover:text-white font-semibold px-6 py-2.5 rounded-xl transition text-sm">
+                <i class="fa-solid fa-magnifying-glass mr-1.5"></i>Search Assets
+            </a>
+        </div>
+
+        <div class="text-left">
+            <p class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">Popular categories</p>
+            <div class="grid grid-cols-3 gap-2">
+                <a href="/?category=Animal" class="cat-btn">
+                    <i class="fa-solid fa-paw text-orange-400 text-lg mb-1 block"></i>
+                    <span class="text-xs text-gray-300">Animal</span>
+                </a>
+                <a href="/?category=Nature" class="cat-btn">
+                    <i class="fa-solid fa-mountain-sun text-green-400 text-lg mb-1 block"></i>
+                    <span class="text-xs text-gray-300">Nature</span>
+                </a>
+                <a href="/?category=Horror" class="cat-btn">
+                    <i class="fa-solid fa-ghost text-purple-400 text-lg mb-1 block"></i>
+                    <span class="text-xs text-gray-300">Horror</span>
+                </a>
+                <a href="/?category=Space" class="cat-btn">
+                    <i class="fa-solid fa-star text-cyan-400 text-lg mb-1 block"></i>
+                    <span class="text-xs text-gray-300">Space</span>
+                </a>
+                <a href="/?category=Food" class="cat-btn">
+                    <i class="fa-solid fa-utensils text-amber-400 text-lg mb-1 block"></i>
+                    <span class="text-xs text-gray-300">Food</span>
+                </a>
+                <a href="/?category=Music" class="cat-btn">
+                    <i class="fa-solid fa-music text-pink-400 text-lg mb-1 block"></i>
+                    <span class="text-xs text-gray-300">Music</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="border-t border-gray-800 py-6 px-4 text-center text-sm text-gray-600">
+    <p>© 2026 <span class="text-gray-400 font-semibold">PixaMedia</span> · <a href="/terms" class="hover:text-gray-400">Terms</a> · <a href="/privacy" class="hover:text-gray-400">Privacy</a></p>
+</footer>
+
+</body>
+</html>
