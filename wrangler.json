@@ -1,0 +1,9 @@
+{
+  "name": "gentle-snow-94a7",
+  "compatibility_date": "2026-07-30",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "./",
+    "not_found_handling": "404-page"
+  }
+}
