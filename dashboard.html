@@ -147,7 +147,7 @@
                 <div class="bg-gray-900 border border-gray-800 rounded-xl p-6 text-center">
                     <i class="fa-solid fa-lock text-3xl text-gray-600 mb-3 block"></i>
                     <h4 class="font-bold text-white mb-2">API Access Required</h4>
-                    <p class="text-gray-500 text-sm mb-4">Upgrade to API Plan ($30/mo) to get unlimited access and your personal API key.</p>
+                    <p class="text-gray-500 text-sm mb-4">Upgrade to API Plan ($30/mo) for 1,000 calls/day and your personal API key.</p>
                     <div class="flex gap-3 justify-center">
                         <a href="https://pixamedia.gumroad.com/l/cnuuv" target="_blank" class="btn-cyan text-sm px-5 py-2">
                             <i class="fa-solid fa-code text-xs"></i>Get API Plan — $30/mo
@@ -184,16 +184,14 @@
                     </div>
                     <div class="bg-gray-900 rounded-xl p-3 text-center">
                         <p class="text-xs text-gray-500">Daily Limit</p>
-                        <p class="text-xl font-black text-green-400 mt-1">∞</p>
+                        <p class="text-xl font-black text-green-400 mt-1">1,000</p>
                     </div>
                 </div>
 
                 <!-- Quick start -->
                 <div class="bg-gray-900 rounded-xl p-4 mb-4">
                     <p class="text-xs text-gray-500 font-semibold uppercase tracking-wider mb-2">Quick Start</p>
-                    <pre class="text-xs text-cyan-300/80 overflow-x-auto"><code>curl https://pixamedia.net/api/v1/search \
-  -H "X-API-Key: YOUR_API_KEY" \
-  -d "category=Nature&type=video"</code></pre>
+                    <pre class="text-xs text-cyan-300/80 overflow-x-auto"><code>curl "https://api.pixamedia.net/api/v1/search?api_key=YOUR_API_KEY&category=Nature&type=video"</code></pre>
                 </div>
 
                 <button onclick="regenerateKey()" class="bg-red-900/30 border border-red-800 text-red-400 text-xs px-4 py-2 rounded-lg hover:bg-red-900/50 transition">
@@ -331,8 +329,8 @@ async function loadProfile() {
             badge.textContent = '⚡ API Member';
             document.getElementById('upgrade-btn').style.display = 'none';
             document.getElementById('stat-plan').textContent = 'API';
-            document.getElementById('stat-limit').textContent = 'Unlimited';
-            document.getElementById('sub-info').innerHTML = '<p class="text-cyan-400 font-semibold">⚡ API Member — $30/month</p><p class="text-gray-500 text-xs mt-1">Unlimited · API key · Commercial license</p>';
+            document.getElementById('stat-limit').textContent = '1,000/day';
+            document.getElementById('sub-info').innerHTML = '<p class="text-cyan-400 font-semibold">⚡ API Member — $30/month</p><p class="text-gray-500 text-xs mt-1">1,000 calls/day · API key · Commercial license</p>';
 
             // API key göster
             document.getElementById('api-locked').classList.add('hidden');

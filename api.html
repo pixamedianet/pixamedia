@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PixaMedia API — Developer Access</title>
-    <meta name="description" content="PixaMedia API — Unlimited access to 4K/8K cinematic videos, images, music and voiceovers. $30/month.">
+    <meta name="description" content="PixaMedia API — 1,000 calls/day to 4K/8K cinematic videos, images, music and SFX. $30/month.">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -56,16 +56,16 @@
     <div class="text-center mb-14 fade-up">
         <div class="inline-flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-bold px-3 py-1 rounded-full mb-4">
             <i class="fa-solid fa-code"></i>
-            <span>REST API · Unlimited Access · $30/month</span>
+            <span>REST API · 1,000 calls/day · $30/month</span>
         </div>
         <h1 class="text-4xl md:text-5xl font-black mb-4">
             Build with <span style="background:linear-gradient(135deg,#22d3ee,#a855f7);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">PixaMedia API</span>
         </h1>
-        <p class="text-gray-400 text-lg max-w-2xl mx-auto">Unlimited 4K/8K cinematic videos, images, music, and voiceovers. One API key, endless possibilities.</p>
+        <p class="text-gray-400 text-lg max-w-2xl mx-auto">1,000 API calls/day · 4K/8K cinematic videos, images, music, and SFX. One API key, endless possibilities.</p>
 
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto mt-8">
             <div class="bg-gray-900 border border-gray-800 rounded-xl p-3 text-center">
-                <p class="text-2xl font-black text-cyan-400">∞</p>
+                <p class="text-2xl font-black text-cyan-400">1,000</p>
                 <p class="text-xs text-gray-500 mt-1">API calls/day</p>
             </div>
             <div class="bg-gray-900 border border-gray-800 rounded-xl p-3 text-center">
@@ -112,9 +112,9 @@ BASE_URL = <span class="str">"https://api.pixamedia.net/api/v1"</span>
 
 response = requests.<span class="fn">get</span>(
     <span class="fn">f</span><span class="str">"{BASE_URL}/search"</span>,
-    headers={<span class="str">"X-API-Key"</span>: API_KEY},
     params={
-        <span class="str">"q"</span>: <span class="str">"cinematic nature forest"</span>,
+        <span class="str">"api_key"</span>: API_KEY,
+        <span class="str">"category"</span>: <span class="str">"Nature"</span>,
         <span class="str">"type"</span>: <span class="str">"video"</span>,
         <span class="str">"limit"</span>: <span class="num">10</span>
     }
@@ -130,9 +130,8 @@ data = response.<span class="fn">json</span>()
 <span class="kw">const</span> BASE_URL = <span class="str">'https://api.pixamedia.net/api/v1'</span>;
 
 <span class="kw">async function</span> <span class="fn">searchAssets</span>(query) {
-  <span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(
-    <span class="str">`${BASE_URL}/search?q=${query}&type=video`</span>,
-    { headers: { <span class="str">'X-API-Key'</span>: API_KEY } }
+<span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(
+    <span class="str">`${BASE_URL}/search?api_key=${API_KEY}&category=${query}&type=video`</span>
   );
   <span class="kw">const</span> data = <span class="kw">await</span> res.<span class="fn">json</span>();
   data.data.<span class="fn">forEach</span>(asset => {
@@ -145,16 +144,13 @@ data = response.<span class="fn">json</span>()
                 <div id="code-curl" class="code-block hidden">
 <button class="copy-btn" onclick="copyCode('code-curl')">Copy</button>
 <span class="cm"># Search for 4K videos</span>
-curl -X GET <span class="str">"https://api.pixamedia.net/api/v1/search?q=nature&type=video"</span> \
-  -H <span class="str">"X-API-Key: pm_your_api_key_here"</span>
+curl -X GET <span class="str">"https://api.pixamedia.net/api/v1/search?api_key=pm_your_api_key_here&category=Nature&type=video&limit=10"</span>
 
 <span class="cm"># Get categories</span>
-curl -X GET <span class="str">"https://api.pixamedia.net/api/v1/categories"</span> \
-  -H <span class="str">"X-API-Key: pm_your_api_key_here"</span>
+curl -X GET <span class="str">"https://api.pixamedia.net/api/v1/categories?api_key=pm_your_api_key_here"</span>
 
 <span class="cm"># Get single asset</span>
-curl -X GET <span class="str">"https://api.pixamedia.net/api/v1/assets/123"</span> \
-  -H <span class="str">"X-API-Key: pm_your_api_key_here"</span></div>
+curl -X GET <span class="str">"https://api.pixamedia.net/api/v1/assets/123?api_key=pm_your_api_key_here"</span></div>
 
                 <div id="code-php" class="code-block hidden">
 <button class="copy-btn" onclick="copyCode('code-php')">Copy</button>
@@ -163,8 +159,7 @@ curl -X GET <span class="str">"https://api.pixamedia.net/api/v1/assets/123"</spa
 
 <span class="kw">$ch</span> = curl_init();
 curl_setopt_array(<span class="kw">$ch</span>, [
-    CURLOPT_URL => <span class="kw">$base_url</span> . <span class="str">'/search?q=nature&type=video'</span>,
-    CURLOPT_HTTPHEADER => [<span class="str">'X-API-Key: '</span> . <span class="kw">$api_key</span>],
+    CURLOPT_URL => <span class="kw">$base_url</span> . <span class="str">'/search?api_key='</span> . <span class="kw">$api_key</span> . <span class="str">'&category=Nature&type=video'</span>,
     CURLOPT_RETURNTRANSFER => <span class="kw">true</span>
 ]);
 <span class="kw">$response</span> = json_decode(curl_exec(<span class="kw">$ch</span>), <span class="kw">true</span>);
@@ -188,12 +183,13 @@ foreach (<span class="kw">$response</span>[<span class="str">'data'</span>] <spa
                         <code class="text-cyan-300 text-sm">/api/v1/search</code>
                         <span class="badge-new">Main</span>
                     </div>
-                    <p class="text-sm text-gray-400 mb-3">Search and filter assets by query, type, category, quality.</p>
+                    <p class="text-sm text-gray-400 mb-3">Search and filter assets by category, type, quality.</p>
                     <div class="code-block text-xs">
 <span class="cm">Parameters:</span>
-  q         <span class="str">string</span>   Search term (e.g. "dark forest night")
-  type      <span class="str">string</span>   video | image | audio
+  api_key   <span class="str">string</span>   Your personal API key
   category  <span class="str">string</span>   Nature | Horror | Animal | Space | ...
+  type      <span class="str">string</span>   video | image | audio
+  quality   <span class="str">string</span>   4K | 8K
   limit     <span class="num">integer</span>  Max results (default: 20, max: 100)
   page      <span class="num">integer</span>  Page number (default: 1)</div>
                 </div>
@@ -224,7 +220,7 @@ foreach (<span class="kw">$response</span>[<span class="str">'data'</span>] <spa
                         <span class="method get">GET</span>
                         <code class="text-cyan-300 text-sm">/api/v1/categories</code>
                     </div>
-                    <p class="text-sm text-gray-400">List all 37+ available categories.</p>
+                    <p class="text-sm text-gray-400">List all 54 available categories.</p>
                 </div>
 
                 <div class="endpoint">
@@ -330,7 +326,7 @@ foreach (<span class="kw">$response</span>[<span class="str">'data'</span>] <spa
                 </div>
 
                 <ul class="space-y-2.5 mb-5">
-                    <li class="flex items-center gap-2.5 text-sm"><i class="fa-solid fa-check w-4 text-cyan-400 flex-shrink-0"></i><span class="text-gray-300">Unlimited API calls</span></li>
+                    <li class="flex items-center gap-2.5 text-sm"><i class="fa-solid fa-check w-4 text-cyan-400 flex-shrink-0"></i><span class="text-gray-300">1,000 API calls/day</span></li>
                     <li class="flex items-center gap-2.5 text-sm"><i class="fa-solid fa-check w-4 text-cyan-400 flex-shrink-0"></i><span class="text-gray-300">4K/8K no watermark</span></li>
                     <li class="flex items-center gap-2.5 text-sm"><i class="fa-solid fa-check w-4 text-cyan-400 flex-shrink-0"></i><span class="text-gray-300">All categories + audio</span></li>
                     <li class="flex items-center gap-2.5 text-sm"><i class="fa-solid fa-check w-4 text-cyan-400 flex-shrink-0"></i><span class="text-gray-300">Commercial license</span></li>
@@ -349,7 +345,7 @@ foreach (<span class="kw">$response</span>[<span class="str">'data'</span>] <spa
                         <div class="flex justify-between text-gray-500"><span>Guest</span><span>2/day free</span></div>
                         <div class="flex justify-between text-gray-500"><span>Registered</span><span>10/day free</span></div>
                         <div class="flex justify-between text-gray-400"><span>VIP</span><span>100/day · $5/mo</span></div>
-                        <div class="flex justify-between text-cyan-400 font-bold"><span>API</span><span>Unlimited · $30/mo</span></div>
+                        <div class="flex justify-between text-cyan-400 font-bold"><span>API</span><span>1,000/day · $30/mo</span></div>
                     </div>
                 </div>
             </div>
@@ -357,8 +353,8 @@ foreach (<span class="kw">$response</span>[<span class="str">'data'</span>] <spa
             <!-- Auth -->
             <div class="bg-gray-900 border border-gray-800 rounded-xl p-4">
                 <h4 class="font-bold text-white text-sm mb-2 flex items-center gap-2"><i class="fa-solid fa-shield text-green-400 text-xs"></i>Authentication</h4>
-                <p class="text-xs text-gray-500 mb-2">Include your API key in every request header:</p>
-                <div class="code-block text-xs">X-API-Key: pm_xxxxxxxxxxxxx</div>
+                <p class="text-xs text-gray-500 mb-2">Include your API key as a query parameter in every request:</p>
+                <div class="code-block text-xs">?api_key=pm_xxxxxxxxxxxxx</div>
             </div>
 
             <!-- Base URL -->
@@ -375,7 +371,7 @@ foreach (<span class="kw">$response</span>[<span class="str">'data'</span>] <spa
                     <div class="flex justify-between"><span class="text-gray-500">Guest</span><span class="text-gray-400">2 req/day</span></div>
                     <div class="flex justify-between"><span class="text-gray-500">Registered</span><span class="text-gray-400">10 req/day</span></div>
                     <div class="flex justify-between"><span class="text-gray-500">VIP</span><span class="text-gray-400">100 req/day</span></div>
-                    <div class="flex justify-between"><span class="text-cyan-400 font-bold">API</span><span class="text-cyan-400 font-bold">Unlimited</span></div>
+                    <div class="flex justify-between"><span class="text-cyan-400 font-bold">API</span><span class="text-cyan-400 font-bold">1,000/day</span></div>
                 </div>
             </div>
 
