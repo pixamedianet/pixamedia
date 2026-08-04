@@ -892,12 +892,13 @@ const T={
 };
 function applyLang(c){const t=T[c]||T.en;document.getElementById('hero-title').innerHTML=t.ht;document.getElementById('hero-sub').innerText=t.hs;document.getElementById('search-in').placeholder=t.sp;document.querySelectorAll('[data-i="search_btn"]').forEach(el=>el.innerText=t.sb);document.querySelectorAll('[data-i="browse_cat"]').forEach(el=>el.innerText=t.bc);document.querySelectorAll('[data-i="trending"]').forEach(el=>el.innerText=t.tr);document.querySelectorAll('[data-i="tab_video"]').forEach(el=>el.innerText=t.tv);document.querySelectorAll('[data-i="tab_image"]').forEach(el=>el.innerText=t.ti);document.querySelectorAll('[data-i="tab_audio"]').forEach(el=>el.innerText=t.ta)}
 
-function switchTab(t){['video','image','audio'].forEach(x=>{const b=document.getElementById('tab-'+x);b.classList.toggle('tab-on',x===t);b.classList.toggle('tab-off',x!==t)});currentTab=t;loadContents(currentCat,currentSearch,currentFilter);}
+function switchTab(t){['video','image','audio'].forEach(x=>{const b=document.getElementById('tab-'+x);b.classList.toggle('tab-on',x===t);b.classList.toggle('tab-off',x!==t)});currentTab=t;loadOffset=0;loadContents(currentCat,currentSearch,currentFilter);}
 
 function setFilter(f,btn){currentFilter=f;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');loadContents(currentCat,currentSearch,currentFilter);}
 
 function filterCat(name,el){
     currentCat=name;
+    loadOffset=0;
     document.querySelectorAll('.cat-card').forEach(c=>c.classList.remove('active'));
     el.classList.add('active');
     const lbl=document.getElementById('active-cat-label');
@@ -1062,13 +1063,45 @@ let currentPage = 1;
 const PAGE_SIZE = 50;
 
 let loadOffset = 0;
+
+function buildQueryUrl(offset){
+  let url = `${SUPABASE_URL}/rest/v1/contents?select=*&limit=50&offset=${offset}`;
+
+  if(currentFilter==='new'){
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    url+=`&created_at=gte.${today.toISOString()}&order=created_at.desc`;
+  } else if(currentFilter==='popular'){
+    url+=`&order=downloads.desc`;
+  } else if(currentFilter==='week'){
+    const week = new Date();
+    week.setDate(week.getDate()-7);
+    url+=`&created_at=gte.${week.toISOString()}&order=created_at.desc`;
+  } else if(currentFilter==='4k'){
+    url+=`&quality=eq.4K&order=created_at.desc`;
+  } else if(currentFilter==='8k'){
+    url+=`&quality=eq.8K&order=created_at.desc`;
+  } else if(currentFilter==='vertical'){
+    url+=`&format=eq.vertical&order=created_at.desc`;
+  } else if(currentFilter==='horizontal'){
+    url+=`&format=eq.horizontal&order=created_at.desc`;
+  } else {
+    url+=`&order=created_at.desc`;
+  }
+
+  if(currentCat&&currentCat!=='All') url+=`&category=eq.${encodeURIComponent(currentCat)}`;
+  if(currentSearch) url+=`&or=(title.ilike.*${encodeURIComponent(currentSearch)}*,subcategory.ilike.*${encodeURIComponent(currentSearch)}*,category.ilike.*${encodeURIComponent(currentSearch)}*)`;
+  if(currentTab&&currentTab!=='all') url+=`&type=eq.${currentTab}`;
+
+  return url;
+}
+
 async function loadMore(){
   loadOffset += 50;
   const grid = document.getElementById('asset-grid');
-  let url = `${SUPABASE_URL}/rest/v1/contents?select=*&limit=50&offset=${loadOffset}&order=created_at.desc`;
-  if(currentTab&&currentTab!=='all') url+=`&type=eq.${currentTab}`;
-  if(currentCat&&currentCat!=='All') url+=`&category=eq.${encodeURIComponent(currentCat)}`;
+  const url = buildQueryUrl(loadOffset);
   const res = await fetch(url,{method:'GET',headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`},mode:'cors'});
+  if(!res.ok){console.error('LoadMore error:',res.status);return;}
   const data = await res.json();
   const oldBtn = grid.querySelector('button');
   if(oldBtn) oldBtn.parentElement.remove();
@@ -1079,7 +1112,7 @@ async function loadMore(){
     btn.innerHTML='<button onclick="loadMore()" class="px-6 py-2 bg-gray-800 text-gray-300 rounded-xl hover:bg-gray-700 transition text-sm">Load More →</button>';
     grid.appendChild(btn);
   }
-}    
+}
 async function loadContents(category='',search='',filter=''){
     const grid=document.getElementById('asset-grid');
     grid.innerHTML='<div class="col-span-4 text-center py-12"><i class="fa-solid fa-spinner spin text-2xl text-cyan-400"></i><p class="text-gray-500 mt-3 text-sm">Loading assets...</p></div>';
