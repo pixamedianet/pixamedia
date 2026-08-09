@@ -351,7 +351,7 @@
     
     <div class="mb-4 px-3 py-2 bg-cyan-500/10 border border-cyan-500/20 rounded-xl flex items-center gap-2">
   <span class="text-cyan-400 text-sm">🔥</span>
-  <span class="text-cyan-400 text-sm font-semibold">153+ new assets</span>
+  <span class="text-cyan-400 text-sm font-semibold"><span id="new-24h-count">...</span> new assets</span>
   <span class="text-gray-500 text-xs">added in the last 24 hours — fresh cinematic content daily!</span>
 </div>
 <!-- Asset Grid -->
@@ -1388,6 +1388,15 @@ loadFoundingCount();
     const assetEl = document.getElementById('total-assets-count');
     const rounded = Math.floor(assetCount / 100) * 100;
     if (assetEl) assetEl.textContent = rounded.toLocaleString() + '+ assets';
+
+    const yesterday = new Date(Date.now() - 24*60*60*1000).toISOString();
+    const h24res = await fetch(`https://qxawiooxixrkhjauibxw.supabase.co/rest/v1/contents?select=id&created_at=gte.${yesterday}`, {
+      headers: { 'apikey': 'sb_publishable_QpCYzbgkJoBG7yKr292leg_0AkRW-c0', 'Prefer': 'count=exact' },
+      method: 'HEAD'
+    });
+    const h24count = parseInt(h24res.headers.get('content-range')?.split('/')[1] || '0');
+    const h24el = document.getElementById('new-24h-count');
+    if (h24el) h24el.textContent = h24count.toLocaleString() + '+';
   } catch(e) {}
 })();
 </script>
