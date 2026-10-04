@@ -44,6 +44,7 @@
         .tab-off:hover{color:#fff}
         .asset-card{transition:border-color .2s,transform .2s;cursor:pointer;position:relative;overflow:hidden}
         .asset-card:hover{border-color:rgba(34,211,238,.5);transform:translateY(-3px)}
+        .thumb-frame{border:1px solid rgba(255,255,255,0.12);border-radius:0;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.06)}
         .asset-card .card-video{display:none;position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:1}
         .asset-card:hover .card-video{display:block}
         .asset-card:hover .card-thumb{opacity:0}
@@ -346,6 +347,7 @@
             <div onclick="filterCat('Real Estate',this)" class="cat-card bg-gray-900 border border-gray-800 hover:border-orange-400/40 p-2.5 rounded-xl text-center"><i class="cat-icon fa-solid fa-house text-base text-orange-400"></i><p class="text-[10px] font-medium mt-1 text-gray-500">Real Estate</p></div>
             <div onclick="filterCat('Technology & Gadgets',this)" class="cat-card bg-gray-900 border border-gray-800 hover:border-blue-400/40 p-2.5 rounded-xl text-center"><i class="cat-icon fa-solid fa-microchip text-base text-blue-400"></i><p class="text-[10px] font-medium mt-1 text-gray-500">Technology</p></div>
             <div onclick="filterCat('Fashion & Beauty',this)" class="cat-card bg-gray-900 border border-gray-800 hover:border-fuchsia-400/40 p-2.5 rounded-xl text-center"><i class="cat-icon fa-solid fa-shirt text-base text-fuchsia-400"></i><p class="text-[10px] font-medium mt-1 text-gray-500">Fashion</p></div>
+            <div onclick="filterCat('Coloring Pages',this)" class="cat-card bg-gray-900 border border-gray-800 hover:border-yellow-400/40 p-2.5 rounded-xl text-center"><i class="cat-icon fa-solid fa-palette text-base text-yellow-400"></i><p class="text-[10px] font-medium mt-1 text-gray-500">Coloring Pages</p></div>
         </div>
     </div>
     
@@ -923,7 +925,7 @@ function openAssetModal(card){
     document.getElementById('am-yt-desc').innerText=ytDesc;
     const preview=document.getElementById('am-preview');
     const fsBtn=`<button onclick="openFullscreen()" style="position:absolute;top:8px;left:8px;z-index:10;background:rgba(0,0,0,0.6);border:none;border-radius:8px;padding:6px 10px;cursor:pointer;color:white;font-size:12px;" title="Full Screen"><i class="fa-solid fa-expand"></i></button>`;
-    if(d.type==='image'&&d.file){preview.innerHTML=fsBtn+`<img src="${d.file}" style="width:100%;height:100%;object-fit:cover;border-radius:.75rem" alt="${d.title}">`;}
+    if(d.type==='image'&&d.file){const isV=d.quality==='A4'||d.format==='vertical';const fit=isV?'contain':'cover';preview.classList.toggle('h-48',!isV);preview.classList.toggle('h-72',isV);preview.innerHTML=fsBtn+`<img src="${d.file}" style="width:100%;height:100%;max-height:90vh;object-fit:${fit};border-radius:.75rem;background:#fff" alt="${d.title}">`;}
     else if(d.type==='video'&&d.file){preview.innerHTML=fsBtn+`<video src="${d.file}" controls muted autoplay loop playsinline style="width:100%;height:100%;object-fit:cover;border-radius:.75rem"></video>`;}
     else if(d.type==='audio'&&d.file){preview.innerHTML=`<div class="flex flex-col items-center gap-3 w-full px-4"><i class="fa-solid fa-music text-4xl text-purple-400"></i><audio src="${d.file}" controls style="width:100%"></audio></div>`;}
     else{preview.innerHTML='<i class="fa-solid fa-circle-play text-4xl text-white/30"></i>';}
@@ -1195,12 +1197,16 @@ function createCard(item){
     const qualityBadge=item.quality?`<span class="badge badge-${item.quality.toLowerCase()}">${item.quality}</span>`:'';
     const newBadge=isNew?`<span class="badge badge-new">NEW</span>`:'';
     const duration=item.duration?formatDuration(item.duration):'';
-    const thumbStyle=item.type==='image'&&item.file_url?`background-image:url('${item.file_url}');background-size:cover;background-position:center`:item.thumbnail_url?`background-image:url('${item.thumbnail_url}');background-size:cover;background-position:center`:'background:linear-gradient(135deg,#0f172a,#1e293b)';
+    // Dikey/A4 görsel tespiti: A4 rozeti veya format=vertical => contain (kırpma yok).
+    const isVerticalImage = item.type==='image' && (item.quality==='A4' || item.format==='vertical');
+    const bgSize = isVerticalImage ? 'contain' : 'cover';
+    const bgBg = isVerticalImage ? '#ffffff' : 'transparent';
+    const thumbStyle=item.type==='image'&&item.file_url?`background-image:url('${item.file_url}');background-size:${bgSize};background-position:center;background-repeat:no-repeat;background-color:${bgBg}`:item.thumbnail_url?`background-image:url('${item.thumbnail_url}');background-size:${bgSize};background-position:center;background-repeat:no-repeat;background-color:${bgBg}`:'background:linear-gradient(135deg,#0f172a,#1e293b)';
     const videoPreview=item.type==='video'&&(item.preview_url||item.file_url)?`<video class="card-video" src="${item.preview_url||item.file_url}" muted loop playsinline preload="none"></video>`:'';
     div.innerHTML=`
         <div class="card-top-badges"><div class="flex gap-1">${qualityBadge}${newBadge}</div>${duration?`<span class="text-[10px] text-white/40 font-mono bg-black/40 px-1.5 py-0.5 rounded">${duration}</span>`:''}</div>
         <div class="card-actions"><div class="card-action-btn" onclick="toggleFav(this,event)"><i class="fa-heart fa-regular"></i></div><div class="card-action-btn" onclick="copyCardPrompt(this,event)"><i class="fa-solid fa-copy"></i></div></div>
-        <div class="flex-grow flex items-center justify-center relative h-full overflow-hidden" style="${thumbStyle}">${videoPreview}${item.type==='audio'?'<i class="fa-solid fa-music text-3xl text-purple-400 z-10 relative"></i>':item.type==='image'?'':'<i class="fa-solid fa-circle-play text-3xl text-white/30 z-10 relative"></i>'}<div class="absolute bottom-2 right-2 text-[8px] text-white/15 font-mono select-none z-10">pixamedia.net</div></div>
+        <div class="flex-grow flex items-center justify-center relative h-full overflow-hidden" style="${thumbStyle}"><div class="thumb-frame absolute inset-0 pointer-events-none"></div>${videoPreview}${item.type==='audio'?'<i class="fa-solid fa-music text-3xl text-purple-400 z-10 relative"></i>':item.type==='image'?'':'<i class="fa-solid fa-circle-play text-3xl text-white/30 z-10 relative"></i>'}<div class="absolute bottom-2 right-2 text-[8px] text-white/15 font-mono select-none z-10">pixamedia.net</div></div>
         <div class="p-3 bg-gray-900 border-t border-gray-800/50 z-10"><span class="text-[10px] ${item.type==='audio'?'bg-purple-500/10 text-purple-400':item.type==='image'?'bg-emerald-500/10 text-emerald-400':'bg-cyan-500/10 text-cyan-400'} font-bold px-2 py-0.5 rounded">${item.quality?item.quality+' ':''}${item.type==='audio'?'AUDIO':item.type==='image'?'IMAGE':'VIDEO'}</span><h4 class="text-xs font-semibold truncate mt-1 text-gray-200">${item.title}</h4><p class="text-[10px] text-gray-600 mt-0.5 flex items-center gap-1"><i class="fa-solid fa-download text-[9px]"></i> ${item.downloads||0} downloads</p></div>`;
     if(item.file_url&&item.type!=='audio'){div.addEventListener('mouseenter',function(){const vid=this.querySelector('.card-video');if(vid){vid.load();vid.play().catch(()=>{});}});div.addEventListener('mouseleave',function(){const vid=this.querySelector('.card-video');if(vid){vid.pause();vid.currentTime=0;}});}
     div.addEventListener('click',function(e){if(e.target.closest('.card-action-btn'))return;openAssetModal(div);});
