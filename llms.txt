@@ -33,15 +33,18 @@ All content is AI-generated and commercially licensed.
 - API Pro: $99/month — 10,000 API calls/day
 - Agency: $299/month — Unlimited API calls
 
-## CATEGORIES (44+)
+## CATEGORIES (55+)
 
-Animal, Horror, Future, Nature, Wild, History, Kids, Animation, Games, Economy,
-Crafts, Vehicles, Motivation, ASMR, Travel, Abstract, Space, Food, Sport, Music,
-Sci-Fi, Dark Fantasy, Luxury, Meditation, Weather, Fire & Water, Timelapse,
-Underground, Paranormal, War & Military, Balkans, Ancient Civilizations, Ocean Deep,
-Extreme Sports, Street Art, Islamic, Advertising,
+Animal, Horror, Future, Nature, Wild, History, News, Kids, Animation, Games,
+Economy, Crafts, Vehicles, Motivation, ASMR, Travel, Abstract, Space, Food,
+Sport, Music, Sci-Fi, Dark Fantasy, Luxury, Meditation, Weather, Fire & Water,
+Timelapse, Underground, Paranormal, War & Military, Balkans, Ancient Civilizations,
+Ocean Deep, Extreme Sports, Street Art, Islamic, Advertising,
 Fire & Explosions, Smoke & Dust, Lightning & Energy, Magic & Spells,
-Blood & Impact, Water & Liquid, Education
+Blood & Impact, Water & Liquid, Education, Green Screen, Motion Graphics,
+Drone & Aerial, Action & Stunts, Architecture & Interior, Medical & Health,
+Wedding & Events, Real Estate, Technology & Gadgets, Fashion & Beauty,
+Coloring Pages
 
 ## API
 
