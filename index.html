@@ -902,6 +902,13 @@ function setFilter(f,btn){currentFilter=f;document.querySelectorAll('.filter-btn
 function filterCat(name,el){
     currentCat=name;
     loadOffset=0;
+    // Coloring Pages sadece image içerir; video tab'i aktifken image kayıtları
+    // (type=image) type=eq.video filtresiyle gizlenir ve "No content" görünür.
+    // Bu kategoriye tıklanınca tab'i image'e çevir.
+    if(name==='Coloring Pages'&&currentTab!=='image'){
+        currentTab='image';
+        ['video','image','audio'].forEach(x=>{const b=document.getElementById('tab-'+x);b.classList.toggle('tab-on',x==='image');b.classList.toggle('tab-off',x!=='image')});
+    }
     document.querySelectorAll('.cat-card').forEach(c=>c.classList.remove('active'));
     el.classList.add('active');
     const lbl=document.getElementById('active-cat-label');
