@@ -1021,7 +1021,7 @@ function doDLPDF(){
     refreshDLUI();
     updateTierBar();
     const pdf=pdfUrlFrom(curAsset.file);
-    if(pdf){const a=document.createElement('a');a.href=pdf;a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();a.remove();}
+    if(pdf){window.open(pdf,'_blank','noopener');}
     toast('PDF download started!');
     closeModal('asset-modal');
 }
