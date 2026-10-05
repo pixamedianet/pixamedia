@@ -86,6 +86,9 @@
         .btn-cyan:active{transform:scale(.98)}
         .btn-vip{background:linear-gradient(135deg,#22d3ee,#a855f7);color:#fff;font-weight:700;border-radius:.75rem;transition:opacity .2s;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;text-decoration:none}
         .btn-vip:hover{opacity:.88}
+        .btn-emerald{background:linear-gradient(135deg,#10b981,#059669);color:#fff;font-weight:700;border-radius:.75rem;transition:opacity .2s,transform .1s;cursor:pointer}
+        .btn-emerald:hover{opacity:.9}
+        .btn-emerald:active{transform:scale(.98)}
         #mob-menu{display:none}
         #mob-menu.open{display:block}
         .btn-disabled{opacity:.4;cursor:not-allowed;pointer-events:none}
@@ -677,6 +680,10 @@
                 <button id="am-dl-btn" onclick="doDL()" class="btn-cyan w-full py-3 text-sm flex items-center justify-center gap-2">
                     <i class="fa-solid fa-download"></i><span>Download Free (Watermarked)</span>
                 </button>
+                <button id="am-pdf-btn" onclick="doDLPDF()" class="hidden btn-emerald w-full py-3 text-sm flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-file-pdf"></i><span>Download PDF (A4 print)</span>
+                </button>
+                <p id="am-pdf-note" class="hidden text-center text-[11px] text-gray-500">Print at 100% / Actual size</p>
                 <p class="text-center text-[11px] text-gray-600">
                     Want 8K &amp; no watermark? <a href="https://pixamedia.gumroad.com/l/ytzukr" target="_blank" class="text-cyan-400 font-bold hover:underline">Get VIP — $5/mo</a>
                 </p>
@@ -937,6 +944,9 @@ function openAssetModal(card){
     else if(d.type==='video'&&d.file){preview.innerHTML=fsBtn+`<video src="${d.file}" controls muted autoplay loop playsinline style="width:100%;height:100%;object-fit:cover;border-radius:.75rem"></video>`;}
     else if(d.type==='audio'&&d.file){preview.innerHTML=`<div class="flex flex-col items-center gap-3 w-full px-4"><i class="fa-solid fa-music text-4xl text-purple-400"></i><audio src="${d.file}" controls style="width:100%"></audio></div>`;}
     else{preview.innerHTML='<i class="fa-solid fa-circle-play text-4xl text-white/30"></i>';}
+    const isColoring=d.type==='image'&&d.quality==='A4';
+    document.getElementById('am-pdf-btn').classList.toggle('hidden',!isColoring);
+    document.getElementById('am-pdf-note').classList.toggle('hidden',!isColoring);
     refreshDLUI();
     openModal('asset-modal');
 }
@@ -998,6 +1008,21 @@ function doDL(){
     refreshDLUI();
     updateTierBar();
     toast('Download started!');
+    closeModal('asset-modal');
+}
+
+function pdfUrlFrom(url){return url?url.replace(/\.png$/i,'.pdf'):''}
+
+function doDLPDF(){
+    if(document.getElementById('hp-email').value!==''||document.getElementById('hp-check').checked){window.location.href='https://google.com';return}
+    if(!isHuman()){toast('Security check failed.','err');return}
+    if(remaining<=0&&userTier!=='vip'){toast('Daily limit reached! Choose a plan to continue.','err');setTimeout(()=>{closeModal('asset-modal');openModal('vip-modal')},1200);return}
+    if(userTier!=='vip')remaining--;
+    refreshDLUI();
+    updateTierBar();
+    const pdf=pdfUrlFrom(curAsset.file);
+    if(pdf){const a=document.createElement('a');a.href=pdf;a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();a.remove();}
+    toast('PDF download started!');
     closeModal('asset-modal');
 }
 
