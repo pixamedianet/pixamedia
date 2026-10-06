@@ -26,9 +26,9 @@ All content is AI-generated and commercially licensed.
 
 ## PRICING
 
-- Guest: FREE — 2 downloads/day (watermarked)
-- Registered: FREE account — 10 downloads/day
-- VIP: $5/month (Founding price) — 100 downloads/day, no watermark, commercial license
+- Guest: FREE — 2 downloads/day
+- Registered: FREE account — 25 downloads/day (launch promotion)
+- VIP: $5/month (Founding price) — unlimited downloads, commercial license
 - API Starter: $30/month — 1,000 API calls/day
 - API Pro: $99/month — 10,000 API calls/day
 - Agency: $299/month — Unlimited API calls
@@ -71,7 +71,6 @@ Coloring Pages
 ❌ Resell on other stock platforms (Shutterstock, Getty, etc.)
 ❌ Redistribute on your own platform
 ❌ Sell as NFTs
-❌ Remove watermarks
 ❌ Claim ownership of assets
 ❌ Share API keys
 

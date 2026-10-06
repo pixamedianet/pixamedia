@@ -321,8 +321,8 @@ async function loadProfile() {
             badge.textContent = '👑 VIP Member';
             document.getElementById('upgrade-btn').style.display = 'none';
             document.getElementById('stat-plan').textContent = 'VIP';
-            document.getElementById('stat-limit').textContent = 'of 100/day';
-            document.getElementById('sub-info').innerHTML = '<p class="text-yellow-400 font-semibold">👑 VIP Member — $5/month</p><p class="text-gray-500 text-xs mt-1">100 downloads/day · No watermark · 4K/8K quality</p>';
+            document.getElementById('stat-limit').textContent = 'unlimited';
+            document.getElementById('sub-info').innerHTML = '<p class="text-yellow-400 font-semibold">👑 VIP Member — $5/month</p><p class="text-gray-500 text-xs mt-1">Unlimited downloads</p>';
 
         } else if(tier === 'api') {
             badge.className = 'badge-api';
