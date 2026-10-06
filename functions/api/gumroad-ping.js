@@ -4,11 +4,12 @@
 // Cloudflare Pages Function: /api/gumroad-ping (POST, form-encoded)
 //
 // Gerekli env değişkenleri (Cloudflare Pages -> Settings -> Variables/Secrets):
-//   GUMROAD_PING_SECRET   : URL'deki ?secret=... ile eşleşen gizli token
-//   GUMROAD_SELLER_ID     : Gumroad hesap user id (satıcı)
-//   GUMROAD_PRODUCT_ID    : API planı ürün id (örn. ttly8aIicN6hi8fhjXrhUA==)
+//   GUMROAD_PING_SECRET   : URL'deki ?secret=... ile eşleşen gizli token (ZORUNLU)
+//   GUMROAD_PRODUCT_ID    : virgülle ayrılmış ürün id listesi (ZORUNLU)
+//                           örn. "ttly8aIicN6hi8fhjXrhUA==,<abonelik-urun-id>"
+//   GUMROAD_SELLER_ID     : satıcı user id (OPSİYONEL — tanımlıysa kontrol edilir)
 //   SUPABASE_URL          : https://xxxx.supabase.co
-//   SUPABASE_SERVICE_KEY  : service_role key (profiles güncelleme yetkisi)
+//   SUPABASE_SERVICE_KEY  : service_role key (profiles + gumroad_pending yazma)
 //
 // Bu dosyada HİÇBİR gizli değer yoktur — tümü env'den okunur.
 
@@ -22,7 +23,7 @@ export async function onRequestPost(context) {
     return json({ error: "unauthorized" }, 401);
   }
 
-  // 2) Form-encoded gövdeyi parse et
+  // 2) Form-encoded gövde parse
   let body = {};
   try {
     body = Object.fromEntries(new URLSearchParams(await request.text()));
@@ -31,9 +32,17 @@ export async function onRequestPost(context) {
     return new Response("ok", { status: 200 }); // Gumroad tekrar denemesin
   }
 
-  // 3) seller_id + product_id doğrulama (yanlışsa 403)
-  if (body.seller_id !== env.GUMROAD_SELLER_ID || body.product_id !== env.GUMROAD_PRODUCT_ID) {
-    console.log("[gumroad-ping] seller/product mismatch", { seller_id: body.seller_id, product_id: body.product_id });
+  // 3) seller_id OPSİYONEL kontrol
+  if (env.GUMROAD_SELLER_ID && body.seller_id !== env.GUMROAD_SELLER_ID) {
+    console.log("[gumroad-ping] seller mismatch", { seller_id: body.seller_id });
+    return json({ error: "forbidden" }, 403);
+  }
+
+  // 4) product_id kontrolü (virgülle ayrılmış çoklu)
+  const allowed = String(env.GUMROAD_PRODUCT_ID || "")
+    .split(",").map((s) => s.trim()).filter(Boolean);
+  if (allowed.length > 0 && !allowed.includes(String(body.product_id || ""))) {
+    console.log("[gumroad-ping] product mismatch", { product_id: body.product_id });
     return json({ error: "forbidden" }, 403);
   }
 
@@ -60,7 +69,7 @@ export async function onRequestPost(context) {
   };
 
   try {
-    // 4) E-postası eşleşen profili bul
+    // 5) E-postası eşleşen profili bul (email zaten lowercase)
     const findRes = await fetch(
       `${env.SUPABASE_URL}/rest/v1/profiles?email=eq.${encodeURIComponent(email)}&select=id,tier&limit=1`,
       { headers: supabaseHeaders }
@@ -68,6 +77,7 @@ export async function onRequestPost(context) {
     const rows = await findRes.json();
 
     if (Array.isArray(rows) && rows.length > 0) {
+      // Profil var -> tier güncelle
       const profileId = rows[0].id;
       const upd = await fetch(
         `${env.SUPABASE_URL}/rest/v1/profiles?id=eq.${profileId}`,
@@ -79,16 +89,28 @@ export async function onRequestPost(context) {
       );
       console.log("[gumroad-ping] tier guncellendi", { email, id: profileId, tier: newTier, http: upd.status });
     } else {
-      // Profil yok -> pending tabloya yazılmalı (tablo şu an yok; SQL kullanıcıya verildi).
-      console.log("[gumroad-ping] profil bulunamadi (pending gerekli)", { email, tier: newTier, sale_id });
+      // Profil yok -> gumroad_pending'e yaz (hesap açılınca trigger aktif eder)
+      const ins = await fetch(
+        `${env.SUPABASE_URL}/rest/v1/gumroad_pending`,
+        {
+          method: "POST",
+          headers: { ...supabaseHeaders, "Prefer": "return=minimal" },
+          body: JSON.stringify({
+            email,
+            sale_id: sale_id || null,
+            subscription_id: subscription_id || null,
+            tier: newTier,
+          }),
+        }
+      );
+      console.log("[gumroad-ping] profil yok -> gumroad_pending'e yazildi", { email, tier: newTier, http: ins.status });
     }
   } catch (e) {
-    // Supabase hatası -> yine 200 dön (Gumroad sonsuz tekrar denemesin), ama logla
     console.log("[gumroad-ping] supabase hatasi:", e && e.message);
     return new Response("ok", { status: 200 });
   }
 
-  // 5) Her zaman 200 dön (idempotent: aynı sale_id tekrar gelirse tier aynı kalır)
+  // 6) Her zaman 200 (idempotent; aynı sale_id tekrar gelirse tier aynı kalır)
   return new Response("ok", { status: 200 });
 }
 
@@ -102,3 +124,4 @@ function json(obj, status) {
     headers: { "content-type": "application/json" },
   });
 }
+
