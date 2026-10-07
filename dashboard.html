@@ -317,13 +317,17 @@ async function loadProfile() {
         const tier = profile.tier || 'registered';
         const badge = document.getElementById('user-badge');
 
+        // API Key sekmesi sadece API planlarında (api / api_pro / agency) gösterilir
+        const isApiPlan = ['api','api_pro','agency'].includes(tier);
+        document.querySelectorAll('.tab-btn').forEach(b=>{ if(b.textContent.includes('API Key')) b.style.display = isApiPlan ? '' : 'none'; });
+
         if(tier === 'vip') {
             badge.className = 'badge-vip';
             badge.textContent = '👑 VIP Member';
             document.getElementById('upgrade-btn').style.display = 'none';
             document.getElementById('stat-plan').textContent = 'VIP';
-            document.getElementById('stat-limit').textContent = 'unlimited';
-            document.getElementById('sub-info').innerHTML = '<p class="text-yellow-400 font-semibold">👑 VIP Member — $5/month</p><p class="text-gray-500 text-xs mt-1">Unlimited downloads</p>';
+            document.getElementById('stat-limit').textContent = 'of 100 limit';
+            document.getElementById('sub-info').innerHTML = '<p class="text-yellow-400 font-semibold">👑 VIP Member — $5/month</p><p class="text-gray-500 text-xs mt-1">100 downloads/day · No API access</p>';
 
         } else if(tier === 'api') {
             badge.className = 'badge-api';
