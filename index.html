@@ -1024,8 +1024,12 @@ function triggerDownload(url, filename){
 function doDL(){
     if(document.getElementById('hp-email').value!==''||document.getElementById('hp-check').checked){window.location.href='https://google.com';return}
     if(!isHuman()){toast('Security check failed.','err');return}
-    if(remaining<=0){toast('Daily limit reached! Choose a plan to continue.','err');setTimeout(()=>{closeModal('asset-modal');openModal('vip-modal')},1200);return}
-    remaining--;
+    if(!consumeDownload()){
+        const msg=(userTier==='guest'||userTier==='registered')?'Daily limit reached! Register or upgrade for more.':'Daily limit reached — resets at midnight.';
+        toast(msg,'err');
+        setTimeout(()=>{closeModal('asset-modal'); if(userTier==='guest'||userTier==='registered') openModal('vip-modal');},1200);
+        return;
+    }
     refreshDLUI();
     updateTierBar();
     const file=curAsset.file||'';
@@ -1042,8 +1046,12 @@ function pdfUrlFrom(url){return url?url.replace(/\.png$/i,'.pdf'):''}
 function doDLPDF(){
     if(document.getElementById('hp-email').value!==''||document.getElementById('hp-check').checked){window.location.href='https://google.com';return}
     if(!isHuman()){toast('Security check failed.','err');return}
-    if(remaining<=0){toast('Daily limit reached! Choose a plan to continue.','err');setTimeout(()=>{closeModal('asset-modal');openModal('vip-modal')},1200);return}
-    remaining--;
+    if(!consumeDownload()){
+        const msg=(userTier==='guest'||userTier==='registered')?'Daily limit reached! Register or upgrade for more.':'Daily limit reached — resets at midnight.';
+        toast(msg,'err');
+        setTimeout(()=>{closeModal('asset-modal'); if(userTier==='guest'||userTier==='registered') openModal('vip-modal');},1200);
+        return;
+    }
     refreshDLUI();
     updateTierBar();
     const pdf=pdfUrlFrom(curAsset.file);
@@ -1061,11 +1069,39 @@ function planLimit(tier){
 function planName(tier){
     return {guest:'Guest', registered:'Registered', vip:'VIP Member', api:'API Member', api_pro:'API Pro', agency:'Agency'}[tier] || 'Guest';
 }
+function getTodayStr(){
+    const d=new Date();
+    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function dlStorageKey(){
+    return 'pm_dl_'+((currentUser&&currentUser.id)||'guest');
+}
+function loadDailyUsage(){
+    try{
+        const raw=localStorage.getItem(dlStorageKey());
+        if(raw){const o=JSON.parse(raw); if(o&&o.date===getTodayStr()) return o.used||0;}
+    }catch(e){}
+    return 0;
+}
+function saveDailyUsage(used){
+    try{ localStorage.setItem(dlStorageKey(), JSON.stringify({date:getTodayStr(), used:used})); }catch(e){}
+}
+let usedToday=0;
 function applyPlan(tier){
     userTier=tier||'registered';
     maxDL=planLimit(userTier);
-    remaining=maxDL;
+    usedToday=loadDailyUsage();
+    remaining = maxDL===Infinity ? Infinity : maxDL - usedToday;
+    if(remaining<0) remaining=0;
     updateTierBar();
+}
+function consumeDownload(){
+    if(maxDL===Infinity) return true; // agency sınırsız
+    if(remaining<=0) return false;
+    remaining--;
+    usedToday++;
+    saveDailyUsage(usedToday);
+    return true;
 }
 function updateTierBar(){
     const bar=document.getElementById('tier-bar');const txt=document.getElementById('tier-txt');
