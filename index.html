@@ -1148,6 +1148,8 @@ async function handleAuthCallback(){
         }catch(e){}
         applyPlan(tier);
         toast('Welcome '+name+'!');
+    } else {
+        applyPlan('guest');
     }
 }
 
