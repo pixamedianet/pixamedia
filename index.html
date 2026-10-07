@@ -742,7 +742,7 @@
             </div>
         </div>
         <div id="auth-up" class="hidden">
-            <p class="text-gray-500 text-xs mb-4">Create a free account — 10 downloads/day.</p>
+            <p class="text-gray-500 text-xs mb-4">Create a free account — 25 downloads/day.</p>
             <div class="space-y-3">
                 <input type="text" id="up-name" placeholder="Your name" class="pm-input">
                 <input type="email" id="up-email" placeholder="Email address" class="pm-input">
@@ -1090,7 +1090,7 @@ async function handleAuthCallback(){
         const name=session.user.user_metadata?.full_name||session.user.email?.split('@')[0]||'User';
         document.getElementById('hdr-signin').innerText=name;
         currentUser=session.user;
-        toast('Welcome '+name+'! 10 downloads/day unlocked.');
+        toast('Welcome '+name+'! 25 downloads/day unlocked.');
     }
 }
 
