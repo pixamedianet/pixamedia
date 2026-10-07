@@ -987,7 +987,7 @@ function shareAsset(platform){
 function refreshDLUI(){
     const tiers={guest:'Guest',registered:'Registered',vip:'VIP Member'};
     document.getElementById('am-tier').innerText=tiers[userTier]||'Guest';
-    document.getElementById('am-left').innerText=`${remaining} / ${maxDL} left today`;
+    document.getElementById('am-left').innerText= maxDL===Infinity?'Unlimited ∞':`${remaining} / ${maxDL} left today`;
     const btn=document.getElementById('am-dl-btn');
     if(remaining<=0){btn.classList.add('btn-disabled');btn.innerHTML='<i class="fa-solid fa-ban"></i><span>Daily Limit Reached</span>'}
     else{btn.classList.remove('btn-disabled');btn.innerHTML='<i class="fa-solid fa-download"></i><span>Download Free</span>'}
@@ -1055,11 +1055,25 @@ function doDLPDF(){
     closeModal('asset-modal');
 }
 
+function planLimit(tier){
+    return {guest:2, registered:25, vip:100, api:1000, api_pro:10000, agency:Infinity}[tier] ?? 25;
+}
+function planName(tier){
+    return {guest:'Guest', registered:'Registered', vip:'VIP Member', api:'API Member', api_pro:'API Pro', agency:'Agency'}[tier] || 'Guest';
+}
+function applyPlan(tier){
+    userTier=tier||'registered';
+    maxDL=planLimit(userTier);
+    remaining=maxDL;
+    updateTierBar();
+}
 function updateTierBar(){
     const bar=document.getElementById('tier-bar');const txt=document.getElementById('tier-txt');
-    const pct=Math.round((remaining/maxDL)*100);
+    const pct=maxDL===Infinity?100:Math.round((remaining/maxDL)*100);
     document.getElementById('dl-pbar').style.width=pct+'%';
-    if(userTier==='vip'){bar.className='badge-vip inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold';txt.innerText=`VIP Member — ${remaining} / ${maxDL} downloads/day`}
+    const lim=maxDL===Infinity?'Unlimited':`${remaining} / ${maxDL} downloads/day`;
+    if(userTier==='vip'){bar.className='badge-vip inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold';txt.innerText=`VIP Member — ${lim}`}
+    else if(userTier==='api'||userTier==='api_pro'||userTier==='agency'){bar.className='badge-vip inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold';txt.innerText=`${planName(userTier)} — ${lim}`}
     else if(userTier==='registered'){bar.className='badge-reg inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold';txt.innerText=`Registered — ${remaining} / ${maxDL} left`}
     else{bar.className='badge-guest inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold';txt.innerText=`Guest — ${remaining} / ${maxDL} downloads/day`}
 }
@@ -1086,11 +1100,18 @@ async function handleAuthCallback(){
     if(!sb)return;
     const{data:{session},error}=await sb.auth.getSession();
     if(session&&session.user){
-        userTier='registered';maxDL=25;remaining=25;updateTierBar();
+        const uid=session.user.id;
         const name=session.user.user_metadata?.full_name||session.user.email?.split('@')[0]||'User';
         document.getElementById('hdr-signin').innerText=name;
         currentUser=session.user;
-        toast('Welcome '+name+'! 25 downloads/day unlocked.');
+        // Planı oku (kendi satırı, kendi oturum JWT'siyle); okunamazsa registered
+        let tier='registered';
+        try{
+            const r=await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${uid}&select=tier`,{headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${session.access_token}`}});
+            if(r.ok){const d=await r.json(); if(Array.isArray(d)&&d[0]&&d[0].tier) tier=d[0].tier;}
+        }catch(e){}
+        applyPlan(tier);
+        toast('Welcome '+name+'!');
     }
 }
 
@@ -1098,8 +1119,8 @@ async function doSignIn(){
     const email=document.getElementById('in-email').value.trim();const pass=document.getElementById('in-pass').value;
     if(!email||!pass){authMsg('Please fill in all fields.',false);return}
     const btn=document.getElementById('signin-btn');btn.innerHTML='<i class="fa-solid fa-spinner spin"></i> Signing in...';btn.classList.add('btn-disabled');
-    if(sb){const{data,error}=await sb.auth.signInWithPassword({email,password:pass});if(error){authMsg(error.message,false)}else{userTier='registered';maxDL=25;remaining=25;updateTierBar();closeModal('signin-modal');toast('Welcome back!');document.getElementById('hdr-signin').innerText='My Account'}}
-    else{await new Promise(r=>setTimeout(r,800));if(email.includes('@')&&pass.length>=6){userTier='registered';maxDL=25;remaining=25;updateTierBar();closeModal('signin-modal');toast('Signed in!');document.getElementById('hdr-signin').innerText='My Account'}else{authMsg('Invalid credentials.',false)}}
+    if(sb){const{data,error}=await sb.auth.signInWithPassword({email,password:pass});if(error){authMsg(error.message,false)}else{await handleAuthCallback();closeModal('signin-modal');toast('Welcome back!');document.getElementById('hdr-signin').innerText='My Account'}}
+    else{await new Promise(r=>setTimeout(r,800));if(email.includes('@')&&pass.length>=6){applyPlan('registered');closeModal('signin-modal');toast('Signed in!');document.getElementById('hdr-signin').innerText='My Account'}else{authMsg('Invalid credentials.',false)}}
     btn.innerHTML='<i class="fa-solid fa-right-to-bracket text-xs"></i> Sign In';btn.classList.remove('btn-disabled');
 }
 
@@ -1110,7 +1131,7 @@ async function doRegister(){
     if(pass.length<8){authMsg('Password must be at least 8 characters.',false);return}
     const btn=document.getElementById('register-btn');btn.innerHTML='<i class="fa-solid fa-spinner spin"></i> Creating...';btn.classList.add('btn-disabled');
     if(sb){const{data,error}=await sb.auth.signUp({email,password:pass,options:{data:{name}}});if(error){authMsg(error.message,false)}else{authMsg('Account created! Check your email.');toast('Welcome to PixaMedia!')}}
-    else{await new Promise(r=>setTimeout(r,900));userTier='registered';maxDL=25;remaining=25;updateTierBar();authMsg('Account created!');setTimeout(()=>{closeModal('signin-modal');toast('Welcome! 25 downloads/day unlocked. + 3 day VIP trial!');document.getElementById('hdr-signin').innerText='My Account'},1500)}
+    else{await new Promise(r=>setTimeout(r,900));applyPlan('registered');authMsg('Account created!');setTimeout(()=>{closeModal('signin-modal');toast('Welcome! 25 downloads/day unlocked. + 3 day VIP trial!');document.getElementById('hdr-signin').innerText='My Account'},1500)}
     btn.innerHTML='<i class="fa-solid fa-user-plus text-xs"></i> Create Free Account';btn.classList.remove('btn-disabled');
 }
 
