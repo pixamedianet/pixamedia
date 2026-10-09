@@ -1008,7 +1008,7 @@ function downloadExt(url){
 
 function triggerDownload(url, filename){
     // Çapraz-origin (R2/CDN) olduğu için fetch -> blob -> createObjectURL -> a[download].
-    return fetch(url,{mode:'cors'}).then(r=>{
+    return fetch(url,{mode:'cors',cache:'reload'}).then(r=>{
         if(!r.ok)throw new Error('HTTP '+r.status);
         return r.blob();
     }).then(blob=>{
