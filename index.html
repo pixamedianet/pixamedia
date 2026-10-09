@@ -1007,8 +1007,8 @@ function downloadExt(url){
 }
 
 function triggerDownload(url, filename){
-    // Çapraz-origin (R2) olduğu için fetch -> blob -> createObjectURL -> a[download].
-    fetch(url,{mode:'cors'}).then(r=>{
+    // Çapraz-origin (R2/CDN) olduğu için fetch -> blob -> createObjectURL -> a[download].
+    return fetch(url,{mode:'cors'}).then(r=>{
         if(!r.ok)throw new Error('HTTP '+r.status);
         return r.blob();
     }).then(blob=>{
@@ -1020,30 +1020,31 @@ function triggerDownload(url, filename){
         a.click();
         a.remove();
         setTimeout(()=>URL.revokeObjectURL(objUrl),10000);
-    }).catch(()=>{
-        // R2 CORS/fetch engellerse fallback: yeni sekmede aç.
-        window.open(url,'_blank','noopener');
+        return true;
     });
 }
 
 function doDL(){
     if(document.getElementById('hp-email').value!==''||document.getElementById('hp-check').checked){window.location.href='https://google.com';return}
     if(!isHuman()){toast('Security check failed.','err');return}
-    if(!consumeDownload()){
+    if(!canDownload()){
         const msg=(userTier==='guest'||userTier==='registered')?'Daily limit reached! Register or upgrade for more.':'Daily limit reached — resets at midnight.';
         toast(msg,'err');
         setTimeout(()=>{closeModal('asset-modal'); if(userTier==='guest'||userTier==='registered') openModal('vip-modal');},1200);
         return;
     }
-    refreshDLUI();
-    updateTierBar();
     const file=curAsset.file||'';
-    if(file){
-        const base=(curAsset.title||'pixamedia-asset').toString().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,60)||'pixamedia-asset';
-        triggerDownload(file, base+'.'+downloadExt(file));
-    }
-    toast('Download started!');
-    closeModal('asset-modal');
+    if(!file){toast('Dosya bulunamadı.','err');return}
+    const base=(curAsset.title||'pixamedia-asset').toString().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,60)||'pixamedia-asset';
+    triggerDownload(file, base+'.'+downloadExt(file)).then(()=>{
+        consumeDownload();
+        refreshDLUI();
+        updateTierBar();
+        toast('Download started!');
+        closeModal('asset-modal');
+    }).catch(()=>{
+        toast('İndirme başlamadı, tekrar deneyin.','err');
+    });
 }
 
 function pdfUrlFrom(url){return url?url.replace(/\.png$/i,'.pdf'):''}
@@ -1051,21 +1052,24 @@ function pdfUrlFrom(url){return url?url.replace(/\.png$/i,'.pdf'):''}
 function doDLPDF(){
     if(document.getElementById('hp-email').value!==''||document.getElementById('hp-check').checked){window.location.href='https://google.com';return}
     if(!isHuman()){toast('Security check failed.','err');return}
-    if(!consumeDownload()){
+    if(!canDownload()){
         const msg=(userTier==='guest'||userTier==='registered')?'Daily limit reached! Register or upgrade for more.':'Daily limit reached — resets at midnight.';
         toast(msg,'err');
         setTimeout(()=>{closeModal('asset-modal'); if(userTier==='guest'||userTier==='registered') openModal('vip-modal');},1200);
         return;
     }
-    refreshDLUI();
-    updateTierBar();
     const pdf=pdfUrlFrom(curAsset.file);
-    if(pdf){
-        const base=(curAsset.title||'pixamedia-coloring-page').toString().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,60)||'pixamedia-coloring-page';
-        triggerDownload(pdf, base+'.pdf');
-    }
-    toast('PDF download started!');
-    closeModal('asset-modal');
+    if(!pdf){toast('PDF bulunamadı.','err');return}
+    const base=(curAsset.title||'pixamedia-coloring-page').toString().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,60)||'pixamedia-coloring-page';
+    triggerDownload(pdf, base+'.pdf').then(()=>{
+        consumeDownload();
+        refreshDLUI();
+        updateTierBar();
+        toast('PDF download started!');
+        closeModal('asset-modal');
+    }).catch(()=>{
+        toast('İndirme başlamadı, tekrar deneyin.','err');
+    });
 }
 
 function planLimit(tier){
@@ -1100,13 +1104,15 @@ function applyPlan(tier){
     if(remaining<0) remaining=0;
     updateTierBar();
 }
+function canDownload(){
+    return maxDL===Infinity || remaining>0;
+}
 function consumeDownload(){
-    if(maxDL===Infinity) return true; // agency sınırsız
-    if(remaining<=0) return false;
+    if(maxDL===Infinity) return; // agency sınırsız
+    if(remaining<=0) return;
     remaining--;
     usedToday++;
     saveDailyUsage(usedToday);
-    return true;
 }
 function updateTierBar(){
     const bar=document.getElementById('tier-bar');const txt=document.getElementById('tier-txt');
