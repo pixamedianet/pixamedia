@@ -1050,22 +1050,21 @@ function doDL(){
         });
         return;
     }
-    // Misafir: mevcut localStorage sayacı (günde 2)
-    if(!canDownload()){
-        const msg=(userTier==='guest'||userTier==='registered')?'Daily limit reached! Register or upgrade for more.':'Daily limit reached — resets at midnight.';
-        toast(msg,'err');
-        setTimeout(()=>{closeModal('asset-modal'); if(userTier==='guest'||userTier==='registered') openModal('vip-modal');},1200);
-        return;
-    }
-    if(!file){toast('Dosya bulunamadı.','err');return}
-    triggerDownload(file, filename).then(()=>{
-        consumeDownload();
-        refreshDLUI();
-        updateTierBar();
-        toast('Download started!');
-        closeModal('asset-modal');
-    }).catch(()=>{
-        toast('İndirme başlamadı, tekrar deneyin.','err');
+    // Misafir: sunucu tarafı IP sayacı (günde 2)
+    consumeGuestDownload().then(res=>{
+        if(res && res.ok){
+            if(!file){toast('Dosya bulunamadı.','err');return}
+            triggerDownload(file, filename).then(()=>{
+                applyServerUsage(res.used, res.limit);
+                toast('Download started!');
+                closeModal('asset-modal');
+            }).catch(()=>{ toast('İndirme başlamadı, tekrar deneyin.','err'); });
+        } else if(res && res.reason==='limit'){
+            toast('Daily limit reached! Register or upgrade for more.','err');
+            setTimeout(()=>{closeModal('asset-modal'); openModal('vip-modal');},1200);
+        } else {
+            toast('İndirme başlamadı, tekrar deneyin.','err');
+        }
     });
 }
 
@@ -1095,21 +1094,21 @@ function doDLPDF(){
         });
         return;
     }
-    if(!canDownload()){
-        const msg=(userTier==='guest'||userTier==='registered')?'Daily limit reached! Register or upgrade for more.':'Daily limit reached — resets at midnight.';
-        toast(msg,'err');
-        setTimeout(()=>{closeModal('asset-modal'); if(userTier==='guest'||userTier==='registered') openModal('vip-modal');},1200);
-        return;
-    }
-    if(!pdf){toast('PDF bulunamadı.','err');return}
-    triggerDownload(pdf, base+'.pdf').then(()=>{
-        consumeDownload();
-        refreshDLUI();
-        updateTierBar();
-        toast('PDF download started!');
-        closeModal('asset-modal');
-    }).catch(()=>{
-        toast('İndirme başlamadı, tekrar deneyin.','err');
+    // Misafir: sunucu tarafı IP sayacı (günde 2)
+    consumeGuestDownload().then(res=>{
+        if(res && res.ok){
+            if(!pdf){toast('PDF bulunamadı.','err');return}
+            triggerDownload(pdf, base+'.pdf').then(()=>{
+                applyServerUsage(res.used, res.limit);
+                toast('PDF download started!');
+                closeModal('asset-modal');
+            }).catch(()=>{ toast('İndirme başlamadı, tekrar deneyin.','err'); });
+        } else if(res && res.reason==='limit'){
+            toast('Daily limit reached! Register or upgrade for more.','err');
+            setTimeout(()=>{closeModal('asset-modal'); openModal('vip-modal');},1200);
+        } else {
+            toast('İndirme başlamadı, tekrar deneyin.','err');
+        }
     });
 }
 
@@ -1182,6 +1181,24 @@ async function fetchUsage(){
         return null;
     }catch(e){ return null; }
 }
+async function consumeGuestDownload(){
+    if(!sb) return {ok:false, reason:'noip'};
+    try{
+        const {data, error} = await sb.rpc('consume_guest_download');
+        if(error) return {ok:false, reason:'noip'};
+        if(data && typeof data==='object' && ('ok' in data)) return data;
+        return {ok:false, reason:'noip'};
+    }catch(e){ return {ok:false, reason:'noip'}; }
+}
+async function fetchGuestUsage(){
+    if(!sb) return null;
+    try{
+        const {data, error} = await sb.rpc('get_guest_usage');
+        if(error) return null;
+        if(data && typeof data==='object' && typeof data.used==='number') return data;
+        return null;
+    }catch(e){ return null; }
+}
 function updateTierBar(){
     const bar=document.getElementById('tier-bar');const txt=document.getElementById('tier-txt');
     const pct=maxDL===Infinity?100:Math.round((remaining/maxDL)*100);
@@ -1230,6 +1247,7 @@ async function handleAuthCallback(){
         toast('Welcome '+name+'!');
     } else {
         applyPlan('guest');
+        fetchGuestUsage().then(u=>{ if(u) applyServerUsage(u.used, u.limit); });
     }
 }
 
