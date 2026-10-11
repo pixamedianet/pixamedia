@@ -10,7 +10,8 @@ H = {'apikey': KEY, 'Authorization': 'Bearer ' + KEY}
 def slugify(s): return re.sub(r'[^a-z0-9]+', '-', s.lower()).strip('-')
 
 def count_type(cat, typ):
-    r = requests.head(f"{BASE}/rest/v1/contents?select=id&category=eq.{urllib.parse.quote(cat)}&type=eq.{typ}", headers={**H, 'Prefer': 'count=exact'}, timeout=40)
+    catf = 'ilike.*SFX' if cat == 'SFX' else f'eq.{urllib.parse.quote(cat)}'
+    r = requests.head(f"{BASE}/rest/v1/contents?select=id&category={catf}&type=eq.{typ}", headers={**H, 'Prefer': 'count=exact'}, timeout=40)
     cr = r.headers.get('content-range', '')
     return int(cr.split('/')[-1]) if '/' in cr else 0
 
@@ -22,6 +23,7 @@ def kind(v, im, au):
     return 'video_image'
 
 def cat_title(cat, k):
+    if k == 'sfx': return 'Free AI Sound Effects | PixaMedia'
     if k == 'audio': return 'Free AI Music Tracks | PixaMedia'
     if k == 'image':
         if cat == 'Coloring Pages': return 'Free Printable Coloring Pages | PixaMedia'
@@ -29,7 +31,8 @@ def cat_title(cat, k):
     return f'Free 4K {cat} Stock Footage & AI Images | PixaMedia'
 
 def cat_desc(cat, k, n):
-    if k == 'audio': d = f"Browse {n} AI-generated music tracks. Watermark-free. 2 free downloads per day."
+    if k == 'sfx': d = f"Browse {n} AI-generated sound effects: nature, battle, space, urban and cinematic. Watermark-free. 2 free downloads per day."
+    elif k == 'audio': d = f"Browse {n} AI-generated music tracks. Watermark-free. 2 free downloads per day."
     elif k == 'image': d = f"Browse {n} AI-generated printable coloring pages. Watermark-free. 2 free downloads per day."
     else: d = f"Browse {n} AI-generated {cat.lower()} videos and images in 4K/8K. Watermark-free. 2 free downloads per day."
     return d[:157] + '...' if len(d) > 160 else d
@@ -44,9 +47,10 @@ os.makedirs(out_dir, exist_ok=True)
 
 for cat in cats:
     slug = slugify(cat)
+    catf = 'ilike.*SFX' if cat == 'SFX' else f'eq.{urllib.parse.quote(cat)}'
     v = count_type(cat, 'video'); im = count_type(cat, 'image'); au = count_type(cat, 'audio')
-    k = kind(v, im, au); n = round50(v + im + au)
-    items = requests.get(f"{BASE}/rest/v1/contents?select=title,thumbnail_url,preview_url,file_url&category=eq.{urllib.parse.quote(cat)}&order=created_at.desc&limit=48", headers=H, timeout=40).json()
+    k = 'sfx' if cat == 'SFX' else kind(v, im, au); n = round50(v + im + au)
+    items = requests.get(f"{BASE}/rest/v1/contents?select=title,thumbnail_url,preview_url,file_url&category={catf}&order=created_at.desc&limit=48", headers=H, timeout=40).json()
     og_img = ''
     for x in items:
         u = x.get('thumbnail_url') or x.get('preview_url') or x.get('file_url')
@@ -71,7 +75,7 @@ for cat in cats:
         t = esc(x.get('title') or cat)
         th = x.get('thumbnail_url') or x.get('preview_url') or ''
         alt = esc(f"{x.get('title') or cat} - {cat} AI stock")
-        img = f'<img src="{esc(th)}" alt="{alt}" loading="lazy" width="320" height="180" style="width:100%;height:100%;object-fit:cover">' if th else '<i class="fa-solid fa-circle-play text-3xl text-white/30"></i>'
+        img = f'<img src="{esc(th)}" alt="{alt}" loading="lazy" width="320" height="180" style="width:100%;height:100%;object-fit:cover">' if th else ('<i class="fa-solid fa-volume-high text-3xl text-purple-400/40"></i>' if k in ('audio', 'sfx') else '<i class="fa-solid fa-circle-play text-3xl text-white/30"></i>')
         cards.append(f'<a href="/category/{slug}" class="asset-card lazy-card bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden flex flex-col h-64"><div class="flex-grow bg-gray-900 flex items-center justify-center relative overflow-hidden">{img}</div><div class="p-3 bg-gray-900 border-t border-gray-800/50"><h4 class="text-xs font-semibold truncate mt-1 text-gray-200">{t}</h4></div></a>')
     prerender = '<div class="prerender-cards grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-4">' + ''.join(cards) + '</div>'
     page = page.replace('<div id="asset-grid"', prerender + '<div id="asset-grid"', 1)

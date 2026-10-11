@@ -109,7 +109,7 @@
         #scroll-top:hover{background:rgba(34,211,238,.25)}
         #am-preview img,#am-preview video,#am-preview audio,.asset-card img,.asset-card video,.asset-card audio{user-select:none;-webkit-user-drag:none;-webkit-touch-callout:none}
     </style>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"PixaMedia","url":"https://pixamedia.net","logo":"https://pixamedia.net/og-image.jpg"}</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"PixaMedia","url":"https://pixamedia.net"}</script></head>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"PixaMedia","url":"https://pixamedia.net","logo":"https://pixamedia.net/og-image.jpg"}</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"PixaMedia","url":"https://pixamedia.net"}</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"PixaMedia","url":"https://pixamedia.net","logo":"https://pixamedia.net/og-image.jpg"}</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"PixaMedia","url":"https://pixamedia.net"}</script></head>
 <body class="min-h-screen flex flex-col">
 
 <div class="pm-trap" aria-hidden="true">
@@ -314,6 +314,7 @@
             <a href="/category/food" onclick="event.preventDefault(); filterCat('Food',this); history.pushState(null,'','/category/food');" class="cat-card bg-gray-900 border border-gray-800 hover:border-red-400/40 p-2.5 rounded-xl text-center"><i class="cat-icon fa-solid fa-utensils text-base text-red-300"></i><p class="text-[10px] font-medium mt-1 text-gray-500">Food</p></a>
             <a href="/category/sport" onclick="event.preventDefault(); filterCat('Sport',this); history.pushState(null,'','/category/sport');" class="cat-card bg-gray-900 border border-gray-800 hover:border-green-500/40 p-2.5 rounded-xl text-center"><i class="cat-icon fa-solid fa-dumbbell text-base text-green-400"></i><p class="text-[10px] font-medium mt-1 text-gray-500">Sport</p></a>
             <a href="/category/music" onclick="event.preventDefault(); filterCat('Music',this); history.pushState(null,'','/category/music');" class="cat-card bg-gray-900 border border-gray-800 hover:border-pink-500/40 p-2.5 rounded-xl text-center"><i class="cat-icon fa-solid fa-headphones text-base text-pink-500"></i><p class="text-[10px] font-medium mt-1 text-gray-500">Music</p></a>
+            <a href="/category/sfx" onclick="event.preventDefault(); filterCat('SFX',this); history.pushState(null,'','/category/sfx');" class="cat-card bg-gray-900 border border-gray-800 hover:border-purple-500/40 p-2.5 rounded-xl text-center"><i class="cat-icon fa-solid fa-volume-high text-base text-purple-500"></i><p class="text-[10px] font-medium mt-1 text-gray-500">SFX</p></a>
             <a href="/category/sci-fi" onclick="event.preventDefault(); filterCat('Sci-Fi',this); history.pushState(null,'','/category/sci-fi');" class="cat-card bg-gray-900 border border-gray-800 hover:border-cyan-500/40 p-2.5 rounded-xl text-center"><i class="cat-icon fa-solid fa-user-astronaut text-base text-cyan-300"></i><p class="text-[10px] font-medium mt-1 text-gray-500">Sci-Fi</p></a>
             <a href="/category/dark-fantasy" onclick="event.preventDefault(); filterCat('Dark Fantasy',this); history.pushState(null,'','/category/dark-fantasy');" class="cat-card bg-gray-900 border border-gray-800 hover:border-purple-500/40 p-2.5 rounded-xl text-center"><i class="cat-icon fa-solid fa-dragon text-base text-purple-500"></i><p class="text-[10px] font-medium mt-1 text-gray-500">Fantasy</p></a>
             <a href="/category/luxury" onclick="event.preventDefault(); filterCat('Luxury',this); history.pushState(null,'','/category/luxury');" class="cat-card bg-gray-900 border border-gray-800 hover:border-yellow-400/40 p-2.5 rounded-xl text-center"><i class="cat-icon fa-solid fa-gem text-base text-yellow-300"></i><p class="text-[10px] font-medium mt-1 text-gray-500">Luxury</p></a>
@@ -910,6 +911,10 @@ function filterCat(name,el){
         currentTab='image';
         ['video','image','audio'].forEach(x=>{const b=document.getElementById('tab-'+x);b.classList.toggle('tab-on',x==='image');b.classList.toggle('tab-off',x!=='image')});
     }
+    if((name==='SFX'||name==='Music')&&currentTab!=='audio'){
+        currentTab='audio';
+        ['video','image','audio'].forEach(x=>{const b=document.getElementById('tab-'+x);b.classList.toggle('tab-on',x==='audio');b.classList.toggle('tab-off',x!=='audio')});
+    }
     document.querySelectorAll('.cat-card').forEach(c=>c.classList.remove('active'));
     el.classList.add('active');
     const lbl=document.getElementById('active-cat-label');
@@ -1366,7 +1371,8 @@ async function loadContents(category='',search='',filter=''){
             url+=`&order=created_at.desc`;
         }
 
-        if(category&&category!=='All')url+=`&category=eq.${encodeURIComponent(category)}`;
+        if(category==='SFX')url+=`&category=ilike.*SFX`;
+        else if(category&&category!=='All')url+=`&category=eq.${encodeURIComponent(category)}`;
         if(search)url+=`&or=(title.ilike.*${encodeURIComponent(search)}*,subcategory.ilike.*${encodeURIComponent(search)}*,category.ilike.*${encodeURIComponent(search)}*)`;
         // Tab filtresi (video/image/audio)
         if(currentTab&&currentTab!=='all') url+=`&type=eq.${currentTab}`;
