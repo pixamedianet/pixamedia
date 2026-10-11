@@ -1,5 +1,5 @@
 import io, re, os, datetime
-SITE = r'c:\Users\User\Desktop\Reels Otomatik\pixamedia-site'
+SITE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 def slugify(s): return re.sub(r'[^a-z0-9]+', '-', s.lower()).strip('-')
 t = io.open(os.path.join(SITE, 'index.html'), encoding='utf-8').read()
 
@@ -14,8 +14,9 @@ t = re.sub(r'(<p class="text-\[10px\] font-medium mt-1 text-gray-500">[^<]*</p>)
 
 jsonld = ('<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"PixaMedia","url":"https://pixamedia.net","logo":"https://pixamedia.net/og-image.jpg"}</script>'
           '<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"PixaMedia","url":"https://pixamedia.net"}</script>')
-t = t.replace('</head>', jsonld + '</head>', 1)
-io.open(os.path.join(SITE, 'index.html'), 'w', encoding='utf-8').write(t)
+if '"@type":"WebSite"' not in t:
+    t = t.replace('</head>', jsonld + '</head>', 1)
+io.open(os.path.join(SITE, 'index.html'), 'w', encoding='utf-8', newline='\n').write(t)
 print('index.html guncellendi; <a> kategori karti:', len(re.findall(r'href="/category/', t)))
 
 cats = [c for c in re.findall(r"filterCat\('([^']+)',this\)", t) if c != 'All']
@@ -26,5 +27,5 @@ sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps
 for u in urls:
     sm += f'  <url><loc>{u}</loc><lastmod>{today}</lastmod></url>\n'
 sm += '</urlset>'
-io.open(os.path.join(SITE, 'sitemap.xml'), 'w', encoding='utf-8').write(sm)
+io.open(os.path.join(SITE, 'sitemap.xml'), 'w', encoding='utf-8', newline='\n').write(sm)
 print('sitemap URL sayisi:', len(urls))

@@ -2,7 +2,7 @@
 import io, re, os, json, urllib.parse, requests
 from collections import Counter, defaultdict
 from html import escape as esc
-SITE = r'c:\Users\User\Desktop\Reels Otomatik\pixamedia-site'
+SITE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE = 'https://qxawiooxixrkhjauibxw.supabase.co'
 KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4YXdpb294aXhya2hqYXVpYnh3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4MjczMTYsImV4cCI6MjA5NTQwMzMxNn0.UfDPc-_tr45TbN9eZace4g9Sy5_1vqMGbbSit_VutKM'
 H = {'apikey': KEY, 'Authorization': 'Bearer ' + KEY}
@@ -83,7 +83,7 @@ for cat in cats:
     page = page.replace('</body>', init_js + '</body>', 1)
     dest = os.path.join(out_dir, slug, 'index.html')
     os.makedirs(os.path.dirname(dest), exist_ok=True)
-    io.open(dest, 'w', encoding='utf-8').write(page)
+    io.open(dest, 'w', encoding='utf-8', newline='\n').write(page)
     print(f'  {slug:30} {k:13} gercek={v+im+au:5} n={n:6}')
 
 print(f'\nUretilen sayfa: {len(cats)}')
