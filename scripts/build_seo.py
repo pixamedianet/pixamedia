@@ -9,17 +9,10 @@ H = {'apikey': KEY, 'Authorization': 'Bearer ' + KEY}
 
 def slugify(s): return re.sub(r'[^a-z0-9]+', '-', s.lower()).strip('-')
 
-tc = defaultdict(Counter)
-offset = 0
-while True:
-    r = requests.get(f"{BASE}/rest/v1/contents?select=category,type&offset={offset}&limit=1000", headers=H, timeout=40)
-    b = r.json()
-    if not isinstance(b, list) or not b: break
-    for x in b:
-        c = x.get('category')
-        if c: tc[c][x.get('type')] += 1
-    if len(b) < 1000: break
-    offset += 1000
+def count_type(cat, typ):
+    r = requests.head(f"{BASE}/rest/v1/contents?select=id&category=eq.{urllib.parse.quote(cat)}&type=eq.{typ}", headers={**H, 'Prefer': 'count=exact'}, timeout=40)
+    cr = r.headers.get('content-range', '')
+    return int(cr.split('/')[-1]) if '/' in cr else 0
 
 def round50(n): return str(n) if n < 50 else f"{(n // 50) * 50}+"
 
@@ -37,7 +30,7 @@ def cat_title(cat, k):
 
 def cat_desc(cat, k, n):
     if k == 'audio': d = f"Browse {n} AI-generated music tracks. Watermark-free. 2 free downloads per day."
-    elif k == 'image': d = f"Browse {n} AI-generated {cat.lower()} images and printable pages. Watermark-free. 2 free downloads per day."
+    elif k == 'image': d = f"Browse {n} AI-generated printable coloring pages. Watermark-free. 2 free downloads per day."
     else: d = f"Browse {n} AI-generated {cat.lower()} videos and images in 4K/8K. Watermark-free. 2 free downloads per day."
     return d[:157] + '...' if len(d) > 160 else d
 
@@ -51,8 +44,7 @@ os.makedirs(out_dir, exist_ok=True)
 
 for cat in cats:
     slug = slugify(cat)
-    d = tc.get(cat, {})
-    v = d.get('video', 0); im = d.get('image', 0); au = d.get('audio', 0)
+    v = count_type(cat, 'video'); im = count_type(cat, 'image'); au = count_type(cat, 'audio')
     k = kind(v, im, au); n = round50(v + im + au)
     items = requests.get(f"{BASE}/rest/v1/contents?select=title,thumbnail_url,preview_url,file_url&category=eq.{urllib.parse.quote(cat)}&order=created_at.desc&limit=48", headers=H, timeout=40).json()
     og_img = ''
@@ -88,6 +80,6 @@ for cat in cats:
     dest = os.path.join(out_dir, slug, 'index.html')
     os.makedirs(os.path.dirname(dest), exist_ok=True)
     io.open(dest, 'w', encoding='utf-8').write(page)
-    print(f'  {slug:30} {k:13} n={n:6}')
+    print(f'  {slug:30} {k:13} gercek={v+im+au:5} n={n:6}')
 
 print(f'\nUretilen sayfa: {len(cats)}')
