@@ -353,6 +353,18 @@ async function loadProfile() {
         }
 
         document.getElementById('stat-today').textContent = profile.downloads_today || 0;
+        // Sunucudan günlük kullanım (tek doğruluk kaynağı)
+        try{
+            const {data: usage, error: uerr} = await sb.rpc('get_download_usage');
+            if(!uerr && usage && typeof usage.used==='number'){
+                document.getElementById('stat-today').textContent = usage.used;
+                if(typeof usage.limit==='number'){
+                    document.getElementById('stat-limit').textContent = 'of ' + usage.limit + ' limit';
+                } else {
+                    document.getElementById('stat-limit').textContent = 'Unlimited';
+                }
+            }
+        }catch(e){}
     } else {
         // Profil yok — guest
         document.getElementById('api-locked').classList.remove('hidden');

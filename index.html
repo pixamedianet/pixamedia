@@ -1027,16 +1027,38 @@ function triggerDownload(url, filename){
 function doDL(){
     if(document.getElementById('hp-email').value!==''||document.getElementById('hp-check').checked){window.location.href='https://google.com';return}
     if(!isHuman()){toast('Security check failed.','err');return}
+    const file=curAsset.file||'';
+    const base=(curAsset.title||'pixamedia-asset').toString().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,60)||'pixamedia-asset';
+    const filename=base+'.'+downloadExt(file);
+    if(currentUser && sb){
+        // Giriş yapmış kullanıcı: tek doğruluk kaynağı sunucu sayacı
+        serverConsumeDownload().then(res=>{
+            if(res && res.ok){
+                if(!file){toast('Dosya bulunamadı.','err');return}
+                triggerDownload(file, filename).then(()=>{
+                    applyServerUsage(res.used, res.limit);
+                    toast('Download started!');
+                    closeModal('asset-modal');
+                }).catch(()=>{ toast('İndirme başlamadı, tekrar deneyin.','err'); });
+            } else if(res && res.reason==='limit'){
+                const msg=(userTier==='guest'||userTier==='registered')?'Daily limit reached! Register or upgrade for more.':'Daily limit reached — resets at midnight.';
+                toast(msg,'err');
+                setTimeout(()=>{closeModal('asset-modal'); if(userTier==='guest'||userTier==='registered') openModal('vip-modal');},1200);
+            } else {
+                toast('İndirme başlamadı, tekrar deneyin.','err');
+            }
+        });
+        return;
+    }
+    // Misafir: mevcut localStorage sayacı (günde 2)
     if(!canDownload()){
         const msg=(userTier==='guest'||userTier==='registered')?'Daily limit reached! Register or upgrade for more.':'Daily limit reached — resets at midnight.';
         toast(msg,'err');
         setTimeout(()=>{closeModal('asset-modal'); if(userTier==='guest'||userTier==='registered') openModal('vip-modal');},1200);
         return;
     }
-    const file=curAsset.file||'';
     if(!file){toast('Dosya bulunamadı.','err');return}
-    const base=(curAsset.title||'pixamedia-asset').toString().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,60)||'pixamedia-asset';
-    triggerDownload(file, base+'.'+downloadExt(file)).then(()=>{
+    triggerDownload(file, filename).then(()=>{
         consumeDownload();
         refreshDLUI();
         updateTierBar();
@@ -1052,15 +1074,34 @@ function pdfUrlFrom(url){return url?url.replace(/\.png$/i,'.pdf'):''}
 function doDLPDF(){
     if(document.getElementById('hp-email').value!==''||document.getElementById('hp-check').checked){window.location.href='https://google.com';return}
     if(!isHuman()){toast('Security check failed.','err');return}
+    const pdf=pdfUrlFrom(curAsset.file);
+    const base=(curAsset.title||'pixamedia-coloring-page').toString().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,60)||'pixamedia-coloring-page';
+    if(currentUser && sb){
+        serverConsumeDownload().then(res=>{
+            if(res && res.ok){
+                if(!pdf){toast('PDF bulunamadı.','err');return}
+                triggerDownload(pdf, base+'.pdf').then(()=>{
+                    applyServerUsage(res.used, res.limit);
+                    toast('PDF download started!');
+                    closeModal('asset-modal');
+                }).catch(()=>{ toast('İndirme başlamadı, tekrar deneyin.','err'); });
+            } else if(res && res.reason==='limit'){
+                const msg=(userTier==='guest'||userTier==='registered')?'Daily limit reached! Register or upgrade for more.':'Daily limit reached — resets at midnight.';
+                toast(msg,'err');
+                setTimeout(()=>{closeModal('asset-modal'); if(userTier==='guest'||userTier==='registered') openModal('vip-modal');},1200);
+            } else {
+                toast('İndirme başlamadı, tekrar deneyin.','err');
+            }
+        });
+        return;
+    }
     if(!canDownload()){
         const msg=(userTier==='guest'||userTier==='registered')?'Daily limit reached! Register or upgrade for more.':'Daily limit reached — resets at midnight.';
         toast(msg,'err');
         setTimeout(()=>{closeModal('asset-modal'); if(userTier==='guest'||userTier==='registered') openModal('vip-modal');},1200);
         return;
     }
-    const pdf=pdfUrlFrom(curAsset.file);
     if(!pdf){toast('PDF bulunamadı.','err');return}
-    const base=(curAsset.title||'pixamedia-coloring-page').toString().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,60)||'pixamedia-coloring-page';
     triggerDownload(pdf, base+'.pdf').then(()=>{
         consumeDownload();
         refreshDLUI();
@@ -1114,6 +1155,33 @@ function consumeDownload(){
     usedToday++;
     saveDailyUsage(usedToday);
 }
+function applyServerUsage(used, limit){
+    usedToday=used||0;
+    const lim=(limit==null)?Infinity:limit;
+    maxDL=lim;
+    remaining = (lim===Infinity) ? Infinity : (lim - usedToday);
+    if(remaining<0) remaining=0;
+    refreshDLUI();
+    updateTierBar();
+}
+async function serverConsumeDownload(){
+    if(!sb) return {ok:false, reason:'auth'};
+    try{
+        const {data, error} = await sb.rpc('consume_download');
+        if(error) return {ok:false, reason:'auth'};
+        if(data && typeof data==='object' && ('ok' in data)) return data;
+        return {ok:false, reason:'auth'};
+    }catch(e){ return {ok:false, reason:'auth'}; }
+}
+async function fetchUsage(){
+    if(!sb) return null;
+    try{
+        const {data, error} = await sb.rpc('get_download_usage');
+        if(error) return null;
+        if(data && typeof data==='object' && typeof data.used==='number' && typeof data.limit==='number') return data;
+        return null;
+    }catch(e){ return null; }
+}
 function updateTierBar(){
     const bar=document.getElementById('tier-bar');const txt=document.getElementById('tier-txt');
     const pct=maxDL===Infinity?100:Math.round((remaining/maxDL)*100);
@@ -1158,6 +1226,7 @@ async function handleAuthCallback(){
             if(r.ok){const d=await r.json(); if(Array.isArray(d)&&d[0]&&d[0].tier) tier=d[0].tier;}
         }catch(e){}
         applyPlan(tier);
+        fetchUsage().then(u=>{ if(u) applyServerUsage(u.used, u.limit); });
         toast('Welcome '+name+'!');
     } else {
         applyPlan('guest');
