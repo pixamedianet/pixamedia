@@ -14,6 +14,7 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install requests
+      - run: python scripts/build_assets.py
       - run: python scripts/build_seo.py
       - run: python scripts/build_post.py
       - name: Commit if changed

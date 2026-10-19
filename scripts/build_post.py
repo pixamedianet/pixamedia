@@ -1,4 +1,4 @@
-import io, re, os, datetime
+import io, re, os, json, datetime
 SITE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 def slugify(s): return re.sub(r'[^a-z0-9]+', '-', s.lower()).strip('-')
 t = io.open(os.path.join(SITE, 'index.html'), encoding='utf-8').read()
@@ -20,8 +20,13 @@ io.open(os.path.join(SITE, 'index.html'), 'w', encoding='utf-8', newline='\n').w
 print('index.html guncellendi; <a> kategori karti:', len(re.findall(r'href="/category/', t)))
 
 cats = [c for c in re.findall(r"filterCat\('([^']+)',this\)", t) if c != 'All']
-urls = ['https://pixamedia.net/', 'https://pixamedia.net/about', 'https://pixamedia.net/api', 'https://pixamedia.net/terms', 'https://pixamedia.net/privacy', 'https://pixamedia.net/refund', 'https://pixamedia.net/sandbox']
-urls += ['https://pixamedia.net/category/' + slugify(c) for c in cats]
+urls = ['https://pixamedia.net/', 'https://pixamedia.net/about', 'https://pixamedia.net/api', 'https://pixamedia.net/terms', 'https://pixamedia.net/privacy', 'https://pixamedia.net/refund']
+urls += ['https://pixamedia.net/category/' + slugify(c) + '/' for c in cats]
+# tekil icerik sayfalari
+selp = os.path.join(SITE, 'scripts', 'asset_pages_selected.json')
+if os.path.exists(selp):
+    sel = json.load(open(selp, encoding='utf-8'))
+    urls += ['https://pixamedia.net/a/' + e['slug'] + '/' for e in sel.values()]
 today = datetime.date.today().isoformat()
 sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
 for u in urls:
