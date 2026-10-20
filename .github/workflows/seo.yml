@@ -28,3 +28,7 @@ jobs:
             git commit -m "SEO: rebuild category pages (daily)"
             git push
           fi
+      - name: Submit URLs to IndexNow
+        run: |
+          sleep 120
+          python scripts/indexnow_submit.py
