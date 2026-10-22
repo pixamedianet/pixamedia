@@ -11,7 +11,7 @@ def slugify(s): return re.sub(r'[^a-z0-9]+', '-', s.lower()).strip('-')
 
 def count_type(cat, typ):
     catf = 'ilike.*SFX' if cat == 'SFX' else f'eq.{urllib.parse.quote(cat)}'
-    r = requests.head(f"{BASE}/rest/v1/contents?select=id&category={catf}&type=eq.{typ}", headers={**H, 'Prefer': 'count=exact'}, timeout=40)
+    r = requests.head(f"{BASE}/rest/v1/contents?select=id&hidden=eq.false&category={catf}&type=eq.{typ}", headers={**H, 'Prefer': 'count=exact'}, timeout=40)
     cr = r.headers.get('content-range', '')
     return int(cr.split('/')[-1]) if '/' in cr else 0
 
@@ -54,7 +54,7 @@ for cat in cats:
     catf = 'ilike.*SFX' if cat == 'SFX' else f'eq.{urllib.parse.quote(cat)}'
     v = count_type(cat, 'video'); im = count_type(cat, 'image'); au = count_type(cat, 'audio')
     k = 'sfx' if cat == 'SFX' else kind(v, im, au); n = round50(v + im + au)
-    items = requests.get(f"{BASE}/rest/v1/contents?select=id,title,thumbnail_url,preview_url,file_url,type&category={catf}&order=created_at.desc&limit=36", headers=H, timeout=40).json()
+    items = requests.get(f"{BASE}/rest/v1/contents?select=id,title,thumbnail_url,preview_url,file_url,type&hidden=eq.false&category={catf}&order=created_at.desc&limit=36", headers=H, timeout=40).json()
     og_img = ''
     for x in items:
         u = x.get('thumbnail_url') or x.get('preview_url') or x.get('file_url')

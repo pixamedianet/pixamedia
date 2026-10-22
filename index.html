@@ -1316,7 +1316,7 @@ const PAGE_SIZE = 50;
 let loadOffset = 0;
 
 function buildQueryUrl(offset){
-  let url = `${SUPABASE_URL}/rest/v1/contents?select=*&limit=50&offset=${offset}`;
+  let url = `${SUPABASE_URL}/rest/v1/contents?select=*&hidden=eq.false&limit=50&offset=${offset}`;
 
   if(currentFilter==='new'){
     const today = new Date();
@@ -1368,7 +1368,7 @@ async function loadContents(category='',search='',filter=''){
     const grid=document.getElementById('asset-grid');
     grid.innerHTML='<div class="col-span-4 text-center py-12"><i class="fa-solid fa-spinner spin text-2xl text-cyan-400"></i><p class="text-gray-500 mt-3 text-sm">Loading assets...</p></div>';
     try{
-        let url=`${SUPABASE_URL}/rest/v1/contents?select=*&limit=50`;
+        let url=`${SUPABASE_URL}/rest/v1/contents?select=*&hidden=eq.false&limit=50`;
 
         // Filtre bazlı sıralama
         if(filter==='new'){
@@ -1644,7 +1644,7 @@ loadFoundingCount();
     const el = document.getElementById('founding-count');
     if (el) el.textContent = remaining + ' left';
 
-    const assetRes = await fetch('https://qxawiooxixrkhjauibxw.supabase.co/rest/v1/contents?select=count', {
+    const assetRes = await fetch('https://qxawiooxixrkhjauibxw.supabase.co/rest/v1/contents?select=count&hidden=eq.false', {
       headers: { 'apikey': 'sb_publishable_QpCYzbgkJoBG7yKr292leg_0AkRW-c0', 'Prefer': 'count=exact' }
     });
     const assetCount = parseInt(assetRes.headers.get('content-range').split('/')[1] || '0');
@@ -1653,7 +1653,7 @@ loadFoundingCount();
     if (assetEl) assetEl.textContent = rounded.toLocaleString() + '+ assets';
 
     const yesterday = new Date(Date.now() - 24*60*60*1000).toISOString();
-    const h24res = await fetch(`https://qxawiooxixrkhjauibxw.supabase.co/rest/v1/contents?select=id&created_at=gte.${yesterday}`, {
+    const h24res = await fetch(`https://qxawiooxixrkhjauibxw.supabase.co/rest/v1/contents?select=id&hidden=eq.false&created_at=gte.${yesterday}`, {
       headers: { 'apikey': 'sb_publishable_QpCYzbgkJoBG7yKr292leg_0AkRW-c0', 'Prefer': 'count=exact' },
       method: 'HEAD'
     });

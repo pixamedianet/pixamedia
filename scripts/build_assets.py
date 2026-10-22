@@ -33,6 +33,8 @@ out_dir = os.path.join(SITE, 'a')
 os.makedirs(out_dir, exist_ok=True)
 made = 0
 for e in entries:
+    if e.get('hidden'):
+        continue
     cat = e['category']
     kind = 'Coloring Page' if cat == 'Coloring Pages' else 'Image'
     res = e.get('quality') or ('A4' if cat == 'Coloring Pages' else '4K')

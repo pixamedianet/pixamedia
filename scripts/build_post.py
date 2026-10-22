@@ -26,7 +26,7 @@ urls += ['https://pixamedia.net/category/' + slugify(c) + '/' for c in cats]
 selp = os.path.join(SITE, 'scripts', 'asset_pages_selected.json')
 if os.path.exists(selp):
     sel = json.load(open(selp, encoding='utf-8'))
-    urls += ['https://pixamedia.net/a/' + e['slug'] + '/' for e in sel.values()]
+    urls += ['https://pixamedia.net/a/' + e['slug'] + '/' for e in sel.values() if not e.get('hidden')]
 today = datetime.date.today().isoformat()
 sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
 for u in urls:
