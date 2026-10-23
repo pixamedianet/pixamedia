@@ -1,5 +1,15 @@
 {
  "pinned_ids": [
+  "35260",
+  "35261",
+  "35262",
+  "35263",
+  "35266",
+  "35267",
+  "35268",
+  "35269",
+  "35270",
+  "35271",
   "35440",
   "35441",
   "35442",
@@ -141,9 +151,80 @@
    "title": "Coloring Page — Rabbit With Peach Basket",
    "slug": "coloring-page-rabbit-with-peach-basket-35440",
    "bytes": 173545
+  },
+  {
+   "id": "35271",
+   "title": "Coloring Page — Smiling Swordfish",
+   "slug": "coloring-page-smiling-swordfish-35271",
+   "bytes": 181648,
+   "ai": true
+  },
+  {
+   "id": "35270",
+   "title": "Coloring Page — Smiling Pipefish",
+   "slug": "coloring-page-smiling-pipefish-35270",
+   "bytes": 92753,
+   "ai": true
+  },
+  {
+   "id": "35269",
+   "title": "Coloring Page — Happy Forklift",
+   "slug": "coloring-page-happy-forklift-35269",
+   "bytes": 132045,
+   "ai": true
+  },
+  {
+   "id": "35268",
+   "title": "Coloring Page — Happy Street Sweeper",
+   "slug": "coloring-page-happy-street-sweeper-35268",
+   "bytes": 190914,
+   "ai": true
+  },
+  {
+   "id": "35267",
+   "title": "Coloring Page — Little Food Truck",
+   "slug": "coloring-page-little-food-truck-35267",
+   "bytes": 146975,
+   "ai": true
+  },
+  {
+   "id": "35266",
+   "title": "Coloring Page — Happy Flatbed Truck",
+   "slug": "coloring-page-happy-flatbed-truck-35266",
+   "bytes": 130767,
+   "ai": true
+  },
+  {
+   "id": "35263",
+   "title": "Coloring Page — Happy Anteater",
+   "slug": "coloring-page-happy-anteater-35263",
+   "bytes": 93613,
+   "ai": true
+  },
+  {
+   "id": "35262",
+   "title": "Coloring Page — Puppy With Ice Cream",
+   "slug": "coloring-page-puppy-with-ice-cream-35262",
+   "bytes": 119733,
+   "ai": true
+  },
+  {
+   "id": "35261",
+   "title": "Coloring Page — Farm Cat Sleeping",
+   "slug": "coloring-page-farm-cat-sleeping-35261",
+   "bytes": 132974,
+   "ai": true
+  },
+  {
+   "id": "35260",
+   "title": "Coloring Page — Happy Farm Dog",
+   "slug": "coloring-page-happy-farm-dog-35260",
+   "bytes": 88522,
+   "ai": true
   }
  ],
- "last_run_date": "2026-10-22",
+ "last_run_date": "2026-10-23",
  "last_run_ok": true,
- "last_added": 10
+ "last_added": 10,
+ "rejected": []
 }
