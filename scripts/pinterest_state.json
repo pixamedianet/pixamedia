@@ -1,5 +1,15 @@
 {
  "pinned_ids": [
+  "35080",
+  "35081",
+  "35252",
+  "35253",
+  "35254",
+  "35255",
+  "35256",
+  "35257",
+  "35258",
+  "35259",
   "35260",
   "35261",
   "35262",
@@ -251,9 +261,89 @@
    "bytes": 88522,
    "ai": true,
    "pub": "Fri, 23 Oct 2026 10:24:00 -0000"
+  },
+  {
+   "id": "35259",
+   "title": "Coloring Page — Little Yellow Chick",
+   "slug": "coloring-page-little-yellow-chick-35259",
+   "bytes": 149812,
+   "ai": true,
+   "pub": "Sat, 24 Oct 2026 10:15:12 -0000"
+  },
+  {
+   "id": "35258",
+   "title": "Coloring Page — Horse Eating Apple",
+   "slug": "coloring-page-horse-eating-apple-35258",
+   "bytes": 97796,
+   "ai": true,
+   "pub": "Sat, 24 Oct 2026 10:15:15 -0000"
+  },
+  {
+   "id": "35257",
+   "title": "Coloring Page — Mule Pulling Cart",
+   "slug": "coloring-page-mule-pulling-cart-35257",
+   "bytes": 97920,
+   "ai": true,
+   "pub": "Sat, 24 Oct 2026 10:15:16 -0000"
+  },
+  {
+   "id": "35256",
+   "title": "Coloring Page — Sheep Jumping Fence",
+   "slug": "coloring-page-sheep-jumping-fence-35256",
+   "bytes": 81071,
+   "ai": true,
+   "pub": "Sat, 24 Oct 2026 10:15:19 -0000"
+  },
+  {
+   "id": "35255",
+   "title": "Coloring Page — Piglet In Rain Boot",
+   "slug": "coloring-page-piglet-in-rain-boot-35255",
+   "bytes": 188974,
+   "ai": true,
+   "pub": "Sat, 24 Oct 2026 10:15:21 -0000"
+  },
+  {
+   "id": "35254",
+   "title": "Coloring Page — Turkey In Rain",
+   "slug": "coloring-page-turkey-in-rain-35254",
+   "bytes": 130242,
+   "ai": true,
+   "pub": "Sat, 24 Oct 2026 10:15:23 -0000"
+  },
+  {
+   "id": "35253",
+   "title": "Coloring Page — Dinosaur With Bunny",
+   "slug": "coloring-page-dinosaur-with-bunny-35253",
+   "bytes": 104762,
+   "ai": true,
+   "pub": "Sat, 24 Oct 2026 10:15:25 -0000"
+  },
+  {
+   "id": "35252",
+   "title": "Coloring Page — Apple Crate With Cat",
+   "slug": "coloring-page-apple-crate-with-cat-35252",
+   "bytes": 218281,
+   "ai": true,
+   "pub": "Sat, 24 Oct 2026 10:15:27 -0000"
+  },
+  {
+   "id": "35081",
+   "title": "Coloring Page — Baby Seahorse",
+   "slug": "coloring-page-baby-seahorse-35081",
+   "bytes": 109992,
+   "ai": true,
+   "pub": "Sat, 24 Oct 2026 10:15:30 -0000"
+  },
+  {
+   "id": "35080",
+   "title": "Coloring Page — Cute Bobcat",
+   "slug": "coloring-page-cute-bobcat-35080",
+   "bytes": 148849,
+   "ai": true,
+   "pub": "Sat, 24 Oct 2026 10:15:32 -0000"
   }
  ],
- "last_run_date": "2026-10-23",
+ "last_run_date": "2026-10-24",
  "last_run_ok": true,
  "last_added": 10,
  "rejected": []
