@@ -1,5 +1,15 @@
 {
  "pinned_ids": [
+  "35069",
+  "35070",
+  "35071",
+  "35072",
+  "35073",
+  "35074",
+  "35075",
+  "35076",
+  "35077",
+  "35079",
   "35080",
   "35081",
   "35252",
@@ -341,9 +351,89 @@
    "bytes": 148849,
    "ai": true,
    "pub": "Sat, 24 Oct 2026 10:15:32 -0000"
+  },
+  {
+   "id": "35079",
+   "title": "Coloring Page — Happy Gazelle",
+   "slug": "coloring-page-happy-gazelle-35079",
+   "bytes": 79183,
+   "ai": true,
+   "pub": "Sun, 25 Oct 2026 10:15:30 -0000"
+  },
+  {
+   "id": "35077",
+   "title": "Coloring Page — Cute Wombat",
+   "slug": "coloring-page-cute-wombat-35077",
+   "bytes": 138038,
+   "ai": true,
+   "pub": "Sun, 25 Oct 2026 10:15:37 -0000"
+  },
+  {
+   "id": "35076",
+   "title": "Coloring Page — Cat With Fish",
+   "slug": "coloring-page-cat-with-fish-35076",
+   "bytes": 104564,
+   "ai": true,
+   "pub": "Sun, 25 Oct 2026 10:15:42 -0000"
+  },
+  {
+   "id": "35075",
+   "title": "Coloring Page — Kitten In Flower Pot",
+   "slug": "coloring-page-kitten-in-flower-pot-35075",
+   "bytes": 156197,
+   "ai": true,
+   "pub": "Sun, 25 Oct 2026 10:15:45 -0000"
+  },
+  {
+   "id": "35074",
+   "title": "Coloring Page — Cat In Tent",
+   "slug": "coloring-page-cat-in-tent-35074",
+   "bytes": 112892,
+   "ai": true,
+   "pub": "Sun, 25 Oct 2026 10:15:49 -0000"
+  },
+  {
+   "id": "35073",
+   "title": "Coloring Page — Pig With Sunflower",
+   "slug": "coloring-page-pig-with-sunflower-35073",
+   "bytes": 118006,
+   "ai": true,
+   "pub": "Sun, 25 Oct 2026 10:15:52 -0000"
+  },
+  {
+   "id": "35072",
+   "title": "Coloring Page — Cow Wearing Bandana",
+   "slug": "coloring-page-cow-wearing-bandana-35072",
+   "bytes": 114586,
+   "ai": true,
+   "pub": "Sun, 25 Oct 2026 10:15:55 -0000"
+  },
+  {
+   "id": "35071",
+   "title": "Coloring Page — Ewe With Lamb",
+   "slug": "coloring-page-ewe-with-lamb-35071",
+   "bytes": 101921,
+   "ai": true,
+   "pub": "Sun, 25 Oct 2026 10:15:58 -0000"
+  },
+  {
+   "id": "35070",
+   "title": "Coloring Page — Chick Peeking Egg",
+   "slug": "coloring-page-chick-peeking-egg-35070",
+   "bytes": 123151,
+   "ai": true,
+   "pub": "Sun, 25 Oct 2026 10:16:01 -0000"
+  },
+  {
+   "id": "35069",
+   "title": "Coloring Page — Calf Drinking Milk",
+   "slug": "coloring-page-calf-drinking-milk-35069",
+   "bytes": 128892,
+   "ai": true,
+   "pub": "Sun, 25 Oct 2026 10:16:04 -0000"
   }
  ],
- "last_run_date": "2026-10-24",
+ "last_run_date": "2026-10-25",
  "last_run_ok": true,
  "last_added": 10,
  "rejected": []
