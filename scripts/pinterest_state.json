@@ -1,5 +1,15 @@
 {
  "pinned_ids": [
+  "34883",
+  "34884",
+  "34885",
+  "35062",
+  "35063",
+  "35064",
+  "35065",
+  "35066",
+  "35067",
+  "35068",
   "35069",
   "35070",
   "35071",
@@ -431,9 +441,89 @@
    "bytes": 128892,
    "ai": true,
    "pub": "Sun, 25 Oct 2026 10:16:04 -0000"
+  },
+  {
+   "id": "35068",
+   "title": "Coloring Page — Turkey With Pumpkin",
+   "slug": "coloring-page-turkey-with-pumpkin-35068",
+   "bytes": 134657,
+   "ai": true,
+   "pub": "Mon, 26 Oct 2026 10:15:14 -0000"
+  },
+  {
+   "id": "35067",
+   "title": "Coloring Page — Chick Under Hen",
+   "slug": "coloring-page-chick-under-hen-35067",
+   "bytes": 105936,
+   "ai": true,
+   "pub": "Mon, 26 Oct 2026 10:15:17 -0000"
+  },
+  {
+   "id": "35066",
+   "title": "Coloring Page — Goat Eating Hay",
+   "slug": "coloring-page-goat-eating-hay-35066",
+   "bytes": 97130,
+   "ai": true,
+   "pub": "Mon, 26 Oct 2026 10:15:19 -0000"
+  },
+  {
+   "id": "35065",
+   "title": "Coloring Page — Llama Carrying Blanket",
+   "slug": "coloring-page-llama-carrying-blanket-35065",
+   "bytes": 96454,
+   "ai": true,
+   "pub": "Mon, 26 Oct 2026 10:15:22 -0000"
+  },
+  {
+   "id": "35064",
+   "title": "Coloring Page — Stegosaurus With Flower",
+   "slug": "coloring-page-stegosaurus-with-flower-35064",
+   "bytes": 85324,
+   "ai": true,
+   "pub": "Mon, 26 Oct 2026 10:15:25 -0000"
+  },
+  {
+   "id": "35063",
+   "title": "Coloring Page — Dinosaur Going To School",
+   "slug": "coloring-page-dinosaur-going-to-school-35063",
+   "bytes": 114423,
+   "ai": true,
+   "pub": "Mon, 26 Oct 2026 10:15:27 -0000"
+  },
+  {
+   "id": "35062",
+   "title": "Coloring Page — Peach Crate With Kitten",
+   "slug": "coloring-page-peach-crate-with-kitten-35062",
+   "bytes": 183957,
+   "ai": true,
+   "pub": "Mon, 26 Oct 2026 10:15:31 -0000"
+  },
+  {
+   "id": "34885",
+   "title": "Coloring Page — Cute Crane Truck",
+   "slug": "coloring-page-cute-crane-truck-34885",
+   "bytes": 120561,
+   "ai": true,
+   "pub": "Mon, 26 Oct 2026 10:15:34 -0000"
+  },
+  {
+   "id": "34884",
+   "title": "Coloring Page — Cute Steam Train",
+   "slug": "coloring-page-cute-steam-train-34884",
+   "bytes": 147039,
+   "ai": true,
+   "pub": "Mon, 26 Oct 2026 10:15:37 -0000"
+  },
+  {
+   "id": "34883",
+   "title": "Coloring Page — Friendly Eagle",
+   "slug": "coloring-page-friendly-eagle-34883",
+   "bytes": 205153,
+   "ai": true,
+   "pub": "Mon, 26 Oct 2026 10:15:40 -0000"
   }
  ],
- "last_run_date": "2026-10-25",
+ "last_run_date": "2026-10-26",
  "last_run_ok": true,
  "last_added": 10,
  "rejected": []
