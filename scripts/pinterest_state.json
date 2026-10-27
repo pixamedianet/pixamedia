@@ -1,5 +1,15 @@
 {
  "pinned_ids": [
+  "34873",
+  "34874",
+  "34875",
+  "34876",
+  "34877",
+  "34878",
+  "34879",
+  "34880",
+  "34881",
+  "34882",
   "34883",
   "34884",
   "34885",
@@ -521,9 +531,89 @@
    "bytes": 205153,
    "ai": true,
    "pub": "Mon, 26 Oct 2026 10:15:40 -0000"
+  },
+  {
+   "id": "34882",
+   "title": "Coloring Page — Friendly Giraffe",
+   "slug": "coloring-page-friendly-giraffe-34882",
+   "bytes": 64432,
+   "ai": true,
+   "pub": "Tue, 27 Oct 2026 10:15:18 -0000"
+  },
+  {
+   "id": "34881",
+   "title": "Coloring Page — Happy Ferret",
+   "slug": "coloring-page-happy-ferret-34881",
+   "bytes": 95886,
+   "ai": true,
+   "pub": "Tue, 27 Oct 2026 10:15:21 -0000"
+  },
+  {
+   "id": "34880",
+   "title": "Coloring Page — Puppy By Campfire",
+   "slug": "coloring-page-puppy-by-campfire-34880",
+   "bytes": 153886,
+   "ai": true,
+   "pub": "Tue, 27 Oct 2026 10:15:25 -0000"
+  },
+  {
+   "id": "34879",
+   "title": "Coloring Page — Dog In Doghouse",
+   "slug": "coloring-page-dog-in-doghouse-34879",
+   "bytes": 132365,
+   "ai": true,
+   "pub": "Tue, 27 Oct 2026 10:15:28 -0000"
+  },
+  {
+   "id": "34878",
+   "title": "Coloring Page — Puppy Sleeping In Shoe",
+   "slug": "coloring-page-puppy-sleeping-in-shoe-34878",
+   "bytes": 137167,
+   "ai": true,
+   "pub": "Tue, 27 Oct 2026 10:15:31 -0000"
+  },
+  {
+   "id": "34877",
+   "title": "Coloring Page — Kitten Licking Paw",
+   "slug": "coloring-page-kitten-licking-paw-34877",
+   "bytes": 108830,
+   "ai": true,
+   "pub": "Tue, 27 Oct 2026 10:15:33 -0000"
+  },
+  {
+   "id": "34876",
+   "title": "Coloring Page — Bunny In Haystack",
+   "slug": "coloring-page-bunny-in-haystack-34876",
+   "bytes": 158794,
+   "ai": true,
+   "pub": "Tue, 27 Oct 2026 10:15:37 -0000"
+  },
+  {
+   "id": "34875",
+   "title": "Coloring Page — Duck With Umbrella",
+   "slug": "coloring-page-duck-with-umbrella-34875",
+   "bytes": 104762,
+   "ai": true,
+   "pub": "Tue, 27 Oct 2026 10:15:40 -0000"
+  },
+  {
+   "id": "34874",
+   "title": "Coloring Page — Sheepdog With Frisbee",
+   "slug": "coloring-page-sheepdog-with-frisbee-34874",
+   "bytes": 110435,
+   "ai": true,
+   "pub": "Tue, 27 Oct 2026 10:15:42 -0000"
+  },
+  {
+   "id": "34873",
+   "title": "Coloring Page — Farm Dog Wagging Tail",
+   "slug": "coloring-page-farm-dog-wagging-tail-34873",
+   "bytes": 138572,
+   "ai": true,
+   "pub": "Tue, 27 Oct 2026 10:15:45 -0000"
   }
  ],
- "last_run_date": "2026-10-26",
+ "last_run_date": "2026-10-27",
  "last_run_ok": true,
  "last_added": 10,
  "rejected": []
