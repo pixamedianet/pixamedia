@@ -1,5 +1,15 @@
 {
  "pinned_ids": [
+  "34684",
+  "34685",
+  "34686",
+  "34687",
+  "34867",
+  "34868",
+  "34869",
+  "34870",
+  "34871",
+  "34872",
   "34873",
   "34874",
   "34875",
@@ -611,9 +621,89 @@
    "bytes": 138572,
    "ai": true,
    "pub": "Tue, 27 Oct 2026 10:15:45 -0000"
+  },
+  {
+   "id": "34872",
+   "title": "Coloring Page — Donkey Eating Thistle",
+   "slug": "coloring-page-donkey-eating-thistle-34872",
+   "bytes": 181249,
+   "ai": true,
+   "pub": "Wed, 28 Oct 2026 10:15:15 -0000"
+  },
+  {
+   "id": "34871",
+   "title": "Coloring Page — Proud Tom Turkey",
+   "slug": "coloring-page-proud-tom-turkey-34871",
+   "bytes": 108710,
+   "ai": true,
+   "pub": "Wed, 28 Oct 2026 10:15:17 -0000"
+  },
+  {
+   "id": "34870",
+   "title": "Coloring Page — Peach With Bird",
+   "slug": "coloring-page-peach-with-bird-34870",
+   "bytes": 85834,
+   "ai": true,
+   "pub": "Wed, 28 Oct 2026 10:15:20 -0000"
+  },
+  {
+   "id": "34869",
+   "title": "Coloring Page — Peach Tree Butterfly",
+   "slug": "coloring-page-peach-tree-butterfly-34869",
+   "bytes": 114961,
+   "ai": true,
+   "pub": "Wed, 28 Oct 2026 10:15:23 -0000"
+  },
+  {
+   "id": "34868",
+   "title": "Coloring Page — Tropical Fruit Platter",
+   "slug": "coloring-page-tropical-fruit-platter-34868",
+   "bytes": 134582,
+   "ai": true,
+   "pub": "Wed, 28 Oct 2026 10:15:25 -0000"
+  },
+  {
+   "id": "34867",
+   "title": "Coloring Page — Orange Juice Glass",
+   "slug": "coloring-page-orange-juice-glass-34867",
+   "bytes": 214612,
+   "ai": true,
+   "pub": "Wed, 28 Oct 2026 10:15:28 -0000"
+  },
+  {
+   "id": "34687",
+   "title": "Coloring Page — Happy Chameleon",
+   "slug": "coloring-page-happy-chameleon-34687",
+   "bytes": 140499,
+   "ai": true,
+   "pub": "Wed, 28 Oct 2026 10:15:31 -0000"
+  },
+  {
+   "id": "34686",
+   "title": "Coloring Page — Smiling Koala Hugging Tree",
+   "slug": "coloring-page-smiling-koala-hugging-tree-34686",
+   "bytes": 87751,
+   "ai": true,
+   "pub": "Wed, 28 Oct 2026 10:15:34 -0000"
+  },
+  {
+   "id": "34685",
+   "title": "Coloring Page — Playful Monkey Hanging",
+   "slug": "coloring-page-playful-monkey-hanging-34685",
+   "bytes": 71215,
+   "ai": true,
+   "pub": "Wed, 28 Oct 2026 10:15:37 -0000"
+  },
+  {
+   "id": "34684",
+   "title": "Coloring Page — Happy Camel",
+   "slug": "coloring-page-happy-camel-34684",
+   "bytes": 132517,
+   "ai": true,
+   "pub": "Wed, 28 Oct 2026 10:15:40 -0000"
   }
  ],
- "last_run_date": "2026-10-27",
+ "last_run_date": "2026-10-28",
  "last_run_ok": true,
  "last_added": 10,
  "rejected": []
