@@ -1396,12 +1396,12 @@
   "title": "Coloring Page — Melon Market Cart",
   "category": "Coloring Pages",
   "type": "image",
-  "file_url": "https://cdn.pixamedia.net/images/coloring_pages/coloring_20261018_084725_fruits-berries_9.png",
+  "file_url": "https://cdn.pixamedia.net/pins/coloring-page-melon-market-cart-34466.jpg",
   "thumbnail_url": "",
-  "preview_url": "https://cdn.pixamedia.net/images/coloring_pages/coloring_20261018_084725_fruits-berries_9.png",
+  "preview_url": "",
   "quality": "A4",
   "format": "vertical",
-  "created_at": "2026-10-18T06:47:57.049259"
+  "created_at": ""
  },
  "coloring-page-pomegranate-crate-with-bow-34465": {
   "slug": "coloring-page-pomegranate-crate-with-bow-34465",
@@ -1409,12 +1409,12 @@
   "title": "Coloring Page — Pomegranate Crate With Bow",
   "category": "Coloring Pages",
   "type": "image",
-  "file_url": "https://cdn.pixamedia.net/images/coloring_pages/coloring_20261018_084650_fruits-berries_7.png",
+  "file_url": "https://cdn.pixamedia.net/pins/coloring-page-pomegranate-crate-with-bow-34465.jpg",
   "thumbnail_url": "",
-  "preview_url": "https://cdn.pixamedia.net/images/coloring_pages/coloring_20261018_084650_fruits-berries_7.png",
+  "preview_url": "",
   "quality": "A4",
   "format": "vertical",
-  "created_at": "2026-10-18T06:47:20.721397"
+  "created_at": ""
  },
  "coloring-page-fig-basket-with-rabbit-34464": {
   "slug": "coloring-page-fig-basket-with-rabbit-34464",
@@ -1422,12 +1422,12 @@
   "title": "Coloring Page — Fig Basket With Rabbit",
   "category": "Coloring Pages",
   "type": "image",
-  "file_url": "https://cdn.pixamedia.net/images/coloring_pages/coloring_20261018_084456_fruits-berries_0.png",
+  "file_url": "https://cdn.pixamedia.net/pins/coloring-page-fig-basket-with-rabbit-34464.jpg",
   "thumbnail_url": "",
-  "preview_url": "https://cdn.pixamedia.net/images/coloring_pages/coloring_20261018_084456_fruits-berries_0.png",
+  "preview_url": "",
   "quality": "A4",
   "format": "vertical",
-  "created_at": "2026-10-18T06:45:32.023957"
+  "created_at": ""
  },
  "veins-of-spring-light-35529": {
   "slug": "veins-of-spring-light-35529",
@@ -3820,5 +3820,96 @@
   "quality": "HD",
   "format": "square",
   "created_at": "2026-10-17T20:13:30.532567"
+ },
+ "coloring-page-rocket-backpack-42053": {
+  "slug": "coloring-page-rocket-backpack-42053",
+  "id": "42053",
+  "title": "Coloring Page — Rocket Backpack",
+  "category": "Coloring Pages",
+  "type": "image",
+  "file_url": "https://cdn.pixamedia.net/pins/coloring-page-rocket-backpack-42053.jpg",
+  "thumbnail_url": "",
+  "preview_url": "",
+  "quality": "A4",
+  "format": "vertical",
+  "created_at": ""
+ },
+ "coloring-page-cute-ufo-42052": {
+  "slug": "coloring-page-cute-ufo-42052",
+  "id": "42052",
+  "title": "Coloring Page — Cute Ufo",
+  "category": "Coloring Pages",
+  "type": "image",
+  "file_url": "https://cdn.pixamedia.net/pins/coloring-page-cute-ufo-42052.jpg",
+  "thumbnail_url": "",
+  "preview_url": "",
+  "quality": "A4",
+  "format": "vertical",
+  "created_at": ""
+ },
+ "coloring-page-alien-soccer-player-42051": {
+  "slug": "coloring-page-alien-soccer-player-42051",
+  "id": "42051",
+  "title": "Coloring Page — Alien Soccer Player",
+  "category": "Coloring Pages",
+  "type": "image",
+  "file_url": "https://cdn.pixamedia.net/pins/coloring-page-alien-soccer-player-42051.jpg",
+  "thumbnail_url": "",
+  "preview_url": "",
+  "quality": "A4",
+  "format": "vertical",
+  "created_at": ""
+ },
+ "coloring-page-unicorn-wearing-party-hat-42050": {
+  "slug": "coloring-page-unicorn-wearing-party-hat-42050",
+  "id": "42050",
+  "title": "Coloring Page — Unicorn Wearing Party Hat",
+  "category": "Coloring Pages",
+  "type": "image",
+  "file_url": "https://cdn.pixamedia.net/pins/coloring-page-unicorn-wearing-party-hat-42050.jpg",
+  "thumbnail_url": "",
+  "preview_url": "",
+  "quality": "A4",
+  "format": "vertical",
+  "created_at": ""
+ },
+ "coloring-page-dragon-in-teacup-42049": {
+  "slug": "coloring-page-dragon-in-teacup-42049",
+  "id": "42049",
+  "title": "Coloring Page — Dragon In Teacup",
+  "category": "Coloring Pages",
+  "type": "image",
+  "file_url": "https://cdn.pixamedia.net/pins/coloring-page-dragon-in-teacup-42049.jpg",
+  "thumbnail_url": "",
+  "preview_url": "",
+  "quality": "A4",
+  "format": "vertical",
+  "created_at": ""
+ },
+ "coloring-page-unicorn-jumping-over-crescent-moon-42048": {
+  "slug": "coloring-page-unicorn-jumping-over-crescent-moon-42048",
+  "id": "42048",
+  "title": "Coloring Page — Unicorn Jumping Over Crescent Moon",
+  "category": "Coloring Pages",
+  "type": "image",
+  "file_url": "https://cdn.pixamedia.net/pins/coloring-page-unicorn-jumping-over-crescent-moon-42048.jpg",
+  "thumbnail_url": "",
+  "preview_url": "",
+  "quality": "A4",
+  "format": "vertical",
+  "created_at": ""
+ },
+ "coloring-page-a-smiling-fire-truck-waving-near-a-tall-oak-tree-42047": {
+  "slug": "coloring-page-a-smiling-fire-truck-waving-near-a-tall-oak-tree-42047",
+  "id": "42047",
+  "title": "Coloring Page — A Smiling Fire Truck Waving Near A Tall Oak Tree",
+  "category": "Coloring Pages",
+  "type": "image",
+  "file_url": "https://cdn.pixamedia.net/pins/coloring-page-a-smiling-fire-truck-waving-near-a-tall-oak-tree-42047.jpg",
+  "thumbnail_url": "",
+  "preview_url": "",
+  "quality": "A4",
+  "format": "vertical",
+  "created_at": ""
  }
 }
